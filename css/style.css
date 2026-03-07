@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    scroll-behavior: smooth;
+}
+
+.bg{
+    background-image: url("../imgs/bg\ \(2\).jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+.bg1{
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+input[type="radio"]:checked + .method {
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1));
+  color: white;
+}
+
+.sidenav{
+    left: -100%;
+    transition: .5s;
+}
+
+.sidenav.active{
+    left: 0;
+    
+}
+
+.prof{
+    display: none;
+}
+
+.prof.active{
+    display: flex;
+}
+
+
+.notif, .filter, .addProd, .delTrIui, .delSoldui, .delNotifui{
+    display: none;
+}
+
+.notif.active, .filter.active, .addProd.active, .delTrIui.active, .delSoldui.active, .delNotifui.active{
+    display: flex;
+}
+
+.delStockui{
+    display: none;
+}
+.delStockui.active{
+    display: flex;
+}
+
+
+
+@media print {
+    @page {
+        size: 58mm auto;
+        margin: 0;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .receipt {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 58mm;
+        padding: 5mm;
+        font-family: monospace;
+        white-space: nowrap;
+    }
+
+    .btns, .btns * {
+        display: none !important;
+    }
+}
