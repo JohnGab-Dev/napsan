@@ -16,27 +16,50 @@ require 'methods/checkInvent.php';
 
 
 ?>
-    <div class="w-full h-screen pt-10 p-2 flex gap-2">
-        <div class="w-1/2 h-full bg-white p-4">
-            <h1 class="font-semibold">SELECT ITEMS HERE</h1>
-            <form action="api/searchController.php" method="post" class="w-full flex items-center">
-                <div class="w-10/12 h-12 bg-slate-100 flex items-center gap-2 px-2 rounded-sm hover:bg-slate-200">
-                    <input type="text" name="search" class="w-11/12 outline-none py-1 bg-slate-100 focus:border-b-2 focus:border-green-600 px-2" placeholder="search here..." autofocus id="myInput" onkeyup="myFunction()">
-                    <img src="imgs/search.png" alt="" class="w-7">
-                </div>
-                <button type="submit" name="find" class="text-base h-12 w-2/12 p-1 rounded-sm bg-green-600 hover:bg-green-700 text-white active:opacity-80 font-medium">Search</button>
-            </form>
+    <div class="w-full min-h-screen pt-20 px-4 flex gap-4">
+        <div class="w-1/2 h-[40rem] bg-white p-6 shadow-lg rounded-lg">
+            <h1 class="font-semibold text-lg text-gray-700">Search items here</h1>
+            <div class="w-full flex justify-center mt-4">
+                <form action="api/searchController.php" method="post" class="w-full relative">
+                    <!-- Search Container -->
+                    <div class="relative w-full">
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                            </svg>
+                        </div>
+
+                        <!-- Input -->
+                        <input 
+                            type="text" 
+                            name="search" 
+                            id="myInput" 
+                            onkeyup="myFunction()" 
+                            placeholder="Search products..." 
+                            autofocus
+                            class="w-full rounded-xl bg-gray-100 pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 shadow-sm focus:bg-white focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        >
+
+                        <!-- Submit Button -->
+                        <button type="submit" name="find" class="absolute right-0 top-0 h-full px-6 bg-green-600 rounded-r-xl text-white font-semibold hover:bg-green-700 transition">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
             <div class="w-full px-2 py-2"></div>
 
             <div class="w-full h-[83%] overflow-y-auto">
-                <table class="w-full font-medium" id="myTable">
+                <table class="w-full font-medium text-sm border-separate border-spacing-0">
                     <thead>
-                        <tr class="text-white bg-green-600">
-                            <th class="p-1 text-left">Product Name</th>
-                            <th class="p-1 text-left">Stock </th>
-                            <th class="p-1 text-left">SRP </th>
-                            <th class="p-1 text-left">QTY </th>
-                            <th class="p-1 text-left">Action</th>
+                        <tr class="bg-green-600 text-white uppercase tracking-wide text-left">
+                            <th class="p-3">Product Name</th>
+                            <th class="p-3">Stock</th>
+                            <th class="p-3">SRP</th>
+                            <th class="p-3">QTY</th>
+                            <th class="p-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,144 +68,146 @@ require 'methods/checkInvent.php';
                             $search = mysqli_real_escape_string($con, $_GET['search']);
                             $query = "SELECT * FROM products WHERE name LIKE '%$search%'";
                             $run_query = mysqli_query($con, $query);
-                            if(mysqli_num_rows($run_query)>0){
-                                while($row = mysqli_fetch_array($run_query)){
 
+                            if(mysqli_num_rows($run_query) > 0){
+                                while($row = mysqli_fetch_array($run_query)){
+                                    $lowStock = $row['qty'] <= 5; // Highlight low stock
                         ?>
-                        <tr class="border-b border-slate-400 hover:bg-slate-100">
-                            <td class="p-1 text-sm"><?= $row['name']?></td>
-                            <td class="p-1"><?= $row['qty']?></td>
-                            <td class="p-1"><?= $row['srp']?></td>
-                            <td class="p-1">
+                        <tr class="transition hover:shadow-md hover:bg-gray-50 rounded-lg <?= $lowStock ? 'bg-red-50' : '' ?>">
+                            <td class="p-3"><?= $row['name']?></td>
+                            <td class="p-3 <?= $lowStock ? 'text-red-600 font-semibold' : '' ?>"><?= $row['qty']?></td>
+                            <td class="p-3">P<?= number_format($row['srp'], 2)?></td>
+                            <td class="p-3">
                                 <form action="api/POSController.php?id=<?= $row['productId']?>" method="post">
-                                    <input type="number" name="qty" class="outline-none border rounded-sm w-20 h-7 border-black px-1 focus:border-2 focus:border-green-600" placeholder="QTY" required>
+                                    <input type="number" name="qty" min="1" class="w-20 h-8 px-2 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-green-500" placeholder="QTY" required>
                             </td>
-                            <td class="p-1">
-                                <button type="submit" name="addtocart" class="text-xs p-1 rounded-sm bg-blue-500 hover:bg-blue-600  text-white active:opacity-80">Add to Cart</button>
+                            <td class="p-3">
+                                <button type="submit" name="addtocart" class="px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium transition">Add to Cart</button>
                                 </form>
                             </td>
-                        </tr> 
+                        </tr>
                         <?php
                                 }
-                            }else{
+                            } else {
                         ?>
                         <tr class="text-center">
-                            <td colspan="5" class="p-1 font-medium">No Products Found!</td>
+                            <td colspan="5" class="p-3 font-medium text-gray-500">No Products Found!</td>
                         </tr>
-                    <?php }}else{?> 
+                        <?php
+                            }
+                        } else {
+                        ?>
                         <tr class="text-center">
-                            <td colspan="5" class="p-1 font-medium">Search For Products First</td>
+                            <td colspan="5" class="p-3 font-medium text-gray-500">Search For Products First</td>
                         </tr>
-                    <?php }?>
-                        
-                            
-                            
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
             
         </div>
-        <div class="w-1/2 h-full bg-white flex flex-col gap-4 overflow-y-auto">
-            <div class="w-full h-1/2 border-b p-4">
-                <div class="w-full h-auto py-1 bg-white">
-                    <h1 class="font-semibold">CART</h1>
+        <div class="scr w-1/2 h-[40rem] bg-white rounded-lg shadow-lg flex flex-col gap-4 overflow-y-auto pb-4">
+            <div class="w-full h-1/2 border-b p-6">
+                <div class="w-full mb-2">
+                    <h1 class="font-semibold text-lg text-gray-700">Products added to cart</h1>
                 </div>
 
                 <div class="w-full h-[90%] overflow-y-auto">
-                    <table class="w-full">
+                    <table class="w-full font-medium text-sm border-separate border-spacing-0">
                         <thead>
-                            <tr class="text-white bg-green-600">
-                                <th class="p-1 text-left">Product Name </th>
-                                <th class="p-1 text-left">QTY </th>
-                                <th class="p-1 text-left">SRP </th>
-                                <th class="p-1 text-left">Total </th>
-                                <th class="p-1 text-left">Action</th>
+                            <tr class="bg-green-600 text-white uppercase tracking-wide text-left">
+                                <th class="p-3">Product Name</th>
+                                <th class="p-3">QTY</th>
+                                <th class="p-3">SRP</th>
+                                <th class="p-3">Total</th>
+                                <th class="p-3">Action</th>
                             </tr>
                         </thead>
-                        <tbody class="text-sm font-medium">
-
-                        <?php
-
-                            $query1 = "SELECT cart.cartId, cart.productId, cart.qty as Cqty, cart.srp, cart.capital, cart.total, products.name FROM cart JOIN products ON cart.productId = products.productId ORDER BY cart.created_at DESC";
+                        <tbody>
+                            <?php
+                            $query1 = "SELECT cart.cartId, cart.productId, cart.qty as Cqty, cart.srp, cart.capital, cart.total, products.name 
+                                    FROM cart 
+                                    JOIN products ON cart.productId = products.productId 
+                                    ORDER BY cart.created_at DESC";
                             $run_query1 = mysqli_query($con, $query1);
                             $sub_total = 0;
 
-                            if(mysqli_num_rows($run_query1)>0){
+                            if(mysqli_num_rows($run_query1) > 0){
                                 while($row1 = mysqli_fetch_array($run_query1)){
-                                    $sub_total = $sub_total + $row1['total'];
-                        ?>
-                            
-                            <tr class="border-b border-slate-400 hover:bg-slate-100">
-                                <td class="p-1"><?= $row1['name']?></td>
-                                <td class="p-1"><?= $row1['Cqty']?></td>
-                                <td class="p-1">P<?= $row1['srp']?></td>
-                                <td class="p-1">
-                                    P<?= $row1['total']?>
-                                </td>
-                                <td class="p-1 flex items-center gap-1">
-                                    
-                                    <button type="button" onclick="editCart(<?= $row1['cartId']?>)" class="text-xs p-1 rounded-sm bg-blue-600 hover:bg-blue-700 text-white active:opacity-80">Edit</button>
-                                   <?php require 'popups/editCart.php';?>
-                                    
+                                    $sub_total += $row1['total'];
+                            ?>
+                            <tr class="transition hover:shadow-md hover:bg-gray-50 rounded-lg">
+                                <td class="p-3"><?= $row1['name']?></td>
+                                <td class="p-3"><?= $row1['Cqty']?></td>
+                                <td class="p-3">P<?= number_format($row1['srp'], 2)?></td>
+                                <td class="p-3">P<?= number_format($row1['total'], 2)?></td>
+                                <td class="p-3 flex items-center gap-2">
+                                    <button type="button" onclick="editCart(<?= $row1['cartId']?>)" class="px-2 py-1 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium transition">Edit</button>
+                                    <?php require 'popups/editCart.php';?>
                                     <form action="api/POSController.php?id=<?= $row1['cartId'];?>" method="post">
-                                        <button type="submit" name="delCart" class="text-xs p-1 rounded-sm bg-red-600 hover:bg-red-700 text-white active:opacity-80">Del</button>
+                                        <button type="submit" name="delCart" class="px-2 py-1 rounded-md bg-red-600 hover:bg-red-700 text-white font-medium transition">Del</button>
                                     </form>
                                 </td>
                             </tr>
                             <?php
                                 }
-                            }else{
-                        ?>
-                        <tr class="text-center">
-                            <td colspan="5" class="p-1 font-medium py-1">No Products added</td>
-                        </tr>
-                    <?php }?> 
-                            
+                            } else {
+                            ?>
+                            <tr class="text-center">
+                                <td colspan="5" class="p-3 font-medium text-gray-500">No Products Added</td>
+                            </tr>
+                            <?php } ?>
                         </tbody>
                     </table>
-
                 </div>
-                
+                                
                 
             </div>
-            <form action="api/POSController.php" method="post" class="w-full h-1/2 flex flex-col px-4 gap-2">
-                <div class="w-full h-auto flex justify-between items-center">
-                    <label for="" class="font-semibold">SUB-TOTAL(PHP):</label>
-                    <input type="text" step="any" name="subtotal" class="sub text-right py-1 outline-none w-4/6 border font-medium mr-12 bg-slate-100 px-2" readonly value="<?= number_format($sub_total, 2);?>" required>
-                </div>
-
-                <div class="w-full h-auto flex justify-between items-center gap-2">
-                    <label for="" class="font-semibold">DISCOUNT(PHP):</label>
-                    <input type="number" step="any" name="discount" class="dis border border-black rounded-sm px-2 py-1 outline-none w-4/5 h-8 font-medium mr-12 focus:border-2 focus:border-green-600" value="0">
-                </div>
-
-                <div class="w-full h-auto flex justify-between items-center">
-                    <label for="" class="font-semibold">TOTAL(PHP):</label>
-                    <input type="text" step="any" name="total" class="total text-right py-1 outline-none w-4/6 border font-medium mr-12 bg-slate-100 px-2" readonly value="<?= number_format($sub_total, 2);?>" required>
-                </div>
-
-                <div class="w-full h-auto flex items-center gap-2">
-                    <h1 class="font-medium">Payment Methods:</h1>
-                    <input type="radio" name="methods" class="hidden" id="method1" required value="Cash">
-                    <label for="method1" class="method px-2 py-1 border rounded-sm hover:bg-green-100 cursor-pointer font-medium" id="method1" >CASH</label>
-
-                    <input type="radio" name="methods" class="hidden" id="method2" required value="Gcash">
-                    <label for="method2" class="method px-2 py-1 border rounded-sm hover:bg-green-100 cursor-pointer font-medium" id="method2" >G-CASH</label>
-
-                    <input type="number" name="refnum" class="border border-black rounded-sm px-2 py-1 outline-none w-[13.5rem] h-8 font-medium mr-12 focus:border-2 focus:border-green-600" placeholder="Ref. num(if gcash)">
-                </div>
-
-                <div class="w-full h-auto flex justify-between items-center gap-2">
-                    <label for=""  class="font-semibold">AMOUNT TENDERED(PHP):</label>
-                    <input type="number" step="any" name="amount" class="border border-black rounded-sm px-2 py-1 outline-none w-4/5 h-8 font-medium mr-12 focus:border-2 focus:border-green-600" value="" placeholder="0.00" required>
-                </div>
+            <form action="api/POSController.php" method="post" class="w-full h-1/2 flex flex-col px-4 gap-4 p-4 overflow-y-auto scr">
                 
-
-                <div class="w-full h-auto flex justify-end items-center gap-4">
-                    
-                    <button type="submit" name="checkout" class="px-2 py-2 rounded-sm bg-green-600 hover:bg-green-700 text-white font-medium active:opacity-80">Checkout</button>
-                    <button type="submit" name="abort" class="px-2 py-2 rounded-sm bg-neutral-600 hover:bg-neutral-700  text-white font-medium active:opacity-80">Cancel</button>
+                <!-- SUB-TOTAL -->
+                <div class="flex justify-between items-center">
+                    <label class="font-semibold text-gray-700">SUB-TOTAL (PHP):</label>
+                    <input type="text" name="subtotal" class="sub w-2/3 text-right px-3 py-2 bg-gray-100 border rounded-md font-medium outline-none" readonly value="<?= number_format($sub_total, 2);?>" required>
                 </div>
+
+                <!-- DISCOUNT -->
+                <div class="flex justify-between items-center">
+                    <label class="font-semibold text-gray-700">DISCOUNT (PHP):</label>
+                    <input type="number" name="discount" step="any" class="dis w-2/3 px-3 py-2 border rounded-md outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 font-medium" value="0">
+                </div>
+
+                <!-- TOTAL -->
+                <div class="flex justify-between items-center">
+                    <label class="font-semibold text-gray-700">TOTAL (PHP):</label>
+                    <input type="text" name="total" class="total w-2/3 text-right px-3 py-2 bg-gray-100 border rounded-md font-medium outline-none" readonly value="<?= number_format($sub_total, 2);?>" required>
+                </div>
+
+                <!-- PAYMENT METHODS -->
+                <div class="flex items-center gap-4">
+                    <span class="font-semibold text-gray-700">Payment Methods:</span>
+
+                    <input type="radio" name="methods" id="method1" class="hidden" required value="Cash">
+                    <label for="method1" class="method px-4 py-2 border rounded-md cursor-pointer hover:bg-green-100 text-gray-700 font-medium">CASH</label>
+
+                    <input type="radio" name="methods" id="method2" class="hidden" required value="Gcash">
+                    <label for="method2" class="method px-4 py-2 border rounded-md cursor-pointer hover:bg-green-100 text-gray-700 font-medium">G-CASH</label>
+
+                    <input type="number" name="refnum" placeholder="Ref. num (if GCASH)" class="ml-auto min-w-lg px-3 py-2 border rounded-md outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 font-medium">
+                </div>
+
+                <!-- AMOUNT TENDERED -->
+                <div class="flex justify-between items-center">
+                    <label class="font-semibold text-gray-700">AMOUNT TENDERED (PHP):</label>
+                    <input type="number" step="any" name="amount" placeholder="0.00" class="w-2/3 px-3 py-2 border rounded-md outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 font-medium" required>
+                </div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="flex justify-end items-center gap-4">
+                    <button type="submit" name="checkout" class="px-4 py-2 rounded-md bg-green-600 hover:bg-green-700 text-white font-semibold transition">Checkout</button>
+                    <button type="submit" name="abort" class="px-4 py-2 rounded-md bg-gray-600 hover:bg-gray-700 text-white font-semibold transition">Cancel</button>
+                </div>
+
             </form>
         </div>
     </div>
@@ -191,30 +216,30 @@ require 'methods/checkInvent.php';
 <script>
 
     function myFunction() {
-  var input, filter, table, tr, td, i, j, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
 
-  // Start from i = 1 to skip the header row
-  for (i = 1; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td");
-    let rowContainsFilter = false;
+        // Start from i = 1 to skip the header row
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            let rowContainsFilter = false;
 
-    for (j = 0; j < td.length; j++) {
-      if (td[j]) {
-        txtValue = td[j].textContent || td[j].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          rowContainsFilter = true;
-          break;
+            for (j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                rowContainsFilter = true;
+                break;
+                }
+            }
+            }
+
+            tr[i].style.display = rowContainsFilter ? "" : "none";
         }
-      }
-    }
-
-    tr[i].style.display = rowContainsFilter ? "" : "none";
-  }
-}
+        }
 
 document.addEventListener("DOMContentLoaded", () => {
     function parseFormattedNumber(value) {

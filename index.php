@@ -6,56 +6,185 @@ include 'partials/__header.php';
 require 'components/navbar.php';
 ?>
 
-<div id="home" class="bg w-full h-screen flex items-center justify-center flex-col">
-    <div class="bg1 w-full h-screen flex items-center justify-center flex-col text-white gap-2">
-        <h1 class="text-7xl font-semibold text-center">Welcome to <br> <span class="font-bold"><span class="text-green-500">N<span class="text-red-600">APSAN</span> <span class="text-white">Pharmacy</span> </h1>
-        <p class="font-semibold">Sa NAPSAN PHARMACY Gamot mo ...Quality !!!</p>
-        <a href="login.php"><button class="px-10 py-2 bg-green-600 rounded-lg text-white font-semibold hover:bg-green-700 active:opacity-80">Login</button></a>
-        
-    </div>
-    
-</div>
+<!-- home -->
+<div id="home" class="w-full min-h-screen bg bg-center bg-cover flex items-center justify-center">
 
+    <!-- Overlay -->
+    <div class="w-full min-h-screen bg-black/60 flex flex-col items-center justify-center text-center text-white px-6 gap-6">
 
-<div id="about" class="w-full h-screen px-20 pt-20 pb-10 flex items-center justify-between">
-    <div class="w-1/2 h-full ">
-        <img src="imgs/pic_nap.jpg" alt="" class="w-[85%] h-[100%]">
-    </div>
+        <!-- Title -->
+        <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+            Welcome to <br>
+            <span>
+                <span class="text-green-500">N<span class="text-red-600">APSAN</span></span>
+                <span class="text-white"> Pharmacy</span>
+            </span>
+        </h1>
 
-    <div class="w-1/2 h-full flex flex-col gap-4 items-center pt-10">
-        <h1 class="text-4xl font-semibold">ABOUT NAPSAN</h1>
-        <p class="text-justify">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia accusantium, optio sequi eius eaque id nihil, ut quasi distinctio reprehenderit autem recusandae, molestias obcaecati non quam amet sit voluptates. Veritatis a voluptatem harum modi iste facilis odio, nobis beatae, ullam vel debitis! Praesentium, accusantium ad? Necessitatibus cupiditate, eveniet unde doloribus culpa quibusdam nihil expedita! Iusto unde, at inventore suscipit hic similique illum praesentium cumque, dicta blanditiis minima ut sed laboriosam perferendis repudiandae non porro recusandae impedit atque asperiores alias, omnis voluptatum reprehenderit? Sapiente, repellat perferendis? Aperiam tempora rem inventore, cupiditate expedita architecto, similique deserunt error magnam rerum minus? Dolorem, accusamus!
+        <!-- Tagline -->
+        <p class="text-lg md:text-xl font-medium text-gray-200 max-w-xl">
+            Sa NAPSAN Pharmacy, ang gamot mo ay siguradong
+            <span class="text-green-400 font-semibold">Quality</span> at
+            <span class="text-green-400 font-semibold">Maaasahan</span>.
         </p>
+
+        <!-- Buttons -->
+        <div class="flex gap-4 mt-4">
+
+            <a href="login.php">
+                <button class="px-8 py-3 bg-green-600 rounded-lg font-semibold hover:bg-green-700 transition">
+                    Login
+                </button>
+            </a>
+
+            <a href="#products">
+                <button class="px-8 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-black transition">
+                    View Products
+                </button>
+            </a>
+
+        </div>
+
     </div>
+
 </div>
 
-<div id="products" class="w-full h-screen bg-green-600 flex flex-col items-center px-24 pt-20 pb-10 gap-6">
-    <h1 class="text-5xl font-semibold text-white">Our Products</h1>
-    <div class="w-full h-4/5 rounded-sm flex gap-10">
-        <div class="w-1/3 h-full rounded-sm bg-white shadow-lg cursor-pointer hover:border-b-8 border-green-300 duration-200">
-            <img src="imgs/pharma.jpg" alt="" class="w-full h-3/6 rounded-t-sm">
-            <div class="w-full h-3/6 flex flex-col items-center py-2 px-4 gap-2">
-                <h1 class="font-semibold text-xl">Prescription Medicines</h1>
-                <p class="indent-5 text-justify">These are drugs that require a doctor's prescription, such as antibiotics, antihypertensives, and insulin. They are regulated and dispensed only under medical supervision.</p>
+<!-- 
+about -->
+<div id="about" class="w-full py-24 px-8 md:px-20 flex flex-col lg:flex-row items-center gap-16">
+
+    <!-- Image -->
+    <div class="w-full lg:w-1/2 flex justify-center">
+        <img 
+            src="imgs/pic_nap.jpg" 
+            alt="Napsan Pharmacy" 
+            class="w-full max-w-md rounded-xl shadow-xl object-cover"
+        >
+    </div>
+
+    <!-- Text Content -->
+    <div class="w-full lg:w-1/2 flex flex-col gap-6">
+
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-800">
+            About Napsan Pharmacy
+        </h1>
+
+        <p class="text-gray-600 leading-relaxed text-justify">
+            Napsan Pharmacy is committed to providing quality medicines,
+            healthcare products, and trusted pharmaceutical services to the
+            community of San Ildefonso, Bulacan. Our goal is to ensure that
+            every customer receives reliable products and professional
+            assistance for their health needs.
+        </p>
+
+        <p class="text-gray-600 leading-relaxed text-justify">
+            We offer a wide range of prescription medicines, over-the-counter
+            drugs, vitamins, supplements, and personal care products. Our
+            pharmacy prioritizes accessibility, affordability, and excellent
+            customer service to help promote healthier lives within our
+            community.
+        </p>
+
+        <!-- Highlight Features -->
+        <div class="grid grid-cols-2 gap-4 mt-4">
+
+            <div class="flex items-center gap-2">
+                <span class="text-green-600 text-xl">✔</span>
+                <p class="text-sm text-gray-700">Trusted Medicines</p>
             </div>
-        </div>
-        <div class="w-1/3 h-full rounded-sm bg-white shadow-lg cursor-pointer hover:border-b-8 border-green-300 duration-200">
-            <img src="imgs/pharma2.jpg" alt="" class="w-full h-3/6 rounded-t-sm">
-            <div class="w-full h-3/6 flex flex-col items-center py-2 px-4 gap-2">
-                <h1 class="font-semibold text-xl">Non-prescription Medicines</h1>
-                <p class="indent-5 text-justify">These include medications that can be bought without a prescription, like pain relievers, cough syrups, antacids, and vitamins. They are used for common, mild conditions.</p>
+
+            <div class="flex items-center gap-2">
+                <span class="text-green-600 text-xl">✔</span>
+                <p class="text-sm text-gray-700">Affordable Prices</p>
             </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-green-600 text-xl">✔</span>
+                <p class="text-sm text-gray-700">Licensed Pharmacists</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="text-green-600 text-xl">✔</span>
+                <p class="text-sm text-gray-700">Quality Healthcare Products</p>
+            </div>
+
         </div>
 
-        <div class="w-1/3 h-full rounded-sm bg-white shadow-lg cursor-pointer hover:border-b-8 border-green-300 duration-200">
-            <img src="imgs/pharma3.jpg" alt="" class="w-full h-3/6 rounded-t-sm">
-            <div class="w-full h-3/6 flex flex-col items-center py-2 px-4 gap-2">
-                <h1 class="font-semibold">Health and Personal Care Products</h1>
-                <p class="indent-5 text-justify">These cover non-medicinal items such as skincare, hygiene products, medical supplies (like thermometers or face masks), baby care, and supplements.</p>
-            </div>
-        </div>
-        
     </div>
+
+</div>
+
+<!-- products -->
+<div id="products" class="w-full bg-green-600 flex flex-col items-center px-10 md:px-24 py-20 gap-12">
+
+    <!-- Title -->
+    <div class="text-center text-white">
+        <h1 class="text-4xl md:text-5xl font-bold">Our Products</h1>
+        <p class="mt-3 text-green-100">Quality medicines and healthcare products you can trust.</p>
+    </div>
+
+    <!-- Product Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-full max-w-7xl">
+
+        <!-- Card 1 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition duration-300 cursor-pointer">
+
+            <img src="imgs/pharma.jpg" class="w-full h-56 object-cover">
+
+            <div class="p-6 flex flex-col gap-3">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Prescription Medicines
+                </h2>
+
+                <p class="text-gray-600 text-sm leading-relaxed text-justify">
+                    These are drugs that require a doctor's prescription such as
+                    antibiotics, antihypertensives, and insulin. They are regulated
+                    and dispensed only under medical supervision.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition duration-300 cursor-pointer">
+
+            <img src="imgs/pharma2.jpg" class="w-full h-56 object-cover">
+
+            <div class="p-6 flex flex-col gap-3">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Non-Prescription Medicines
+                </h2>
+
+                <p class="text-gray-600 text-sm leading-relaxed text-justify">
+                    These include medications that can be purchased without a
+                    prescription such as pain relievers, cough syrups, antacids,
+                    and vitamins for common mild conditions.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 hover:shadow-2xl transition duration-300 cursor-pointer">
+
+            <img src="imgs/pharma3.jpg" class="w-full h-56 object-cover">
+
+            <div class="p-6 flex flex-col gap-3">
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Health & Personal Care
+                </h2>
+
+                <p class="text-gray-600 text-sm leading-relaxed text-justify">
+                    Includes skincare, hygiene products, medical supplies
+                    like thermometers and face masks, baby care items,
+                    supplements, and other wellness products.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
 
@@ -110,8 +239,8 @@ require 'components/navbar.php';
 
             <div class="mt-4 text-sm text-gray-600">
                 <p><span class="font-semibold">Business Hours:</span></p>
-                <p>Mon - Sat: 8:00 AM - 8:00 PM</p>
-                <p>Sunday: Closed</p>
+                <p>Mon - Sun: 6:30:00 AM - 6:30 PM</p>
+                <!-- <p>Sunday: Closed</p> -->
             </div>
         </div>
 
