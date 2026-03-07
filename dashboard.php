@@ -16,17 +16,24 @@ require 'methods/checkInvent.php';
 
     if($_SESSION['user']['role'] == 'cashier'){
         echo "<script>window.location.href = 'pos.php'</script>";
-    }
-    
+    }   
+
+    //year declaration
+    $year = "";
     if(isset($_GET['year'])){
         $year = mysqli_real_escape_string($con, $_GET['year']);
+    }
+    
+    
+    if($year && $year != ""){
+        $year = mysqli_real_escape_string($con, $_GET['year']);
 
-        $query1 = "SELECT SUM(qty) as total FROM productsold WHERE YEAR(date_created) = '$year' GROUP BY date_created";
-        $query4 = "SELECT SUM(profit) as prof FROM transactions WHERE YEAR(date_created) = '$year' GROUP BY date_created";
-        $query15 = "SELECT SUM(profit) as prof FROM transactions WHERE YEAR(date_created) = '$year'";
+        $query1 = "SELECT SUM(qty) as total FROM productsold WHERE YEAR(created_at) = '$year' GROUP BY created_at";
+        $query4 = "SELECT SUM(profit) as prof FROM transactions WHERE YEAR(created_at) = '$year' GROUP BY created_at";
+        $query15 = "SELECT SUM(profit) as prof FROM transactions WHERE YEAR(created_at) = '$year'";
     }else{
-         $query1 = "SELECT SUM(qty) as total FROM productsold GROUP BY date_created";
-         $query4 = "SELECT SUM(profit) as prof FROM transactions GROUP BY date_created";
+         $query1 = "SELECT SUM(qty) as total FROM productsold GROUP BY created_at";
+         $query4 = "SELECT SUM(profit) as prof FROM transactions GROUP BY created_at";
          $query15 = "SELECT SUM(profit) as prof FROM transactions";
     }
     $query = "SELECT * FROM products";
@@ -53,203 +60,306 @@ require 'methods/checkInvent.php';
     $row15 = mysqli_fetch_array($run_query15);
 ?>
 
-<div class="w-full h-screen pt-14 p-2 pb-4">
-    <div class="w-full h-full flex flex-col gap-2">
-        <div class="w-full h-1/5 flex gap-2">
-            <div class="w-1/4 h-full rounded-sm border-r-4 border-green-600 bg-white shadow-lg p-2">
-                <h1 class="font-medium">Total Products</h1>
-                <h1 class="text-5xl text-center mt-2"><?= number_format($num_of_products, 0)?></h1>
+<div class="w-full min-h-screen mt-20 px-10 pb-4 font-medium">
+    <div class="w-full flex flex-col gap-6">
+        <div class="w-full rounded-xl h-40 flex flex-col justify-center bg-green-600 text-white p-6 shadow-lg relative overflow-hidden">
+            <div class="flex flex-col gap-2 z-10">
+                <h1 class="text-2xl font-bold">Hi Admin, Welcome Back!</h1>
+                <p class="text-sm opacity-90">In this admin account, you can manage your inventory system efficiently.</p>
             </div>
-
-            <div class="w-1/4 h-full rounded-sm border-r-4 border-blue-600 bg-white shadow-lg p-2">
-                <h1 class="font-medium">Average Sales Per Day</h1>
-                <h1 class="text-5xl text-center mt-2"><?= $num_of_days == 0 ? '0' : number_format($row['total'] / $num_of_days, 0) ?></h1>
+            <!-- Optional decorative shape or icon -->
+            <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-green-500 rounded-full opacity-30"></div>
+        </div>
+        <div class="w-full h-40 flex gap-6">
+        <!-- Total Products -->
+        <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-green-600">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-gray-700 font-semibold text-lg">Total Products</h1>
+                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= number_format($num_of_products, 0)?></h1>
             </div>
-
-            <div class="w-1/4 h-full rounded-sm border-r-4 border-yellow-600 bg-white shadow-lg p-2">
-                <h1 class="font-medium">Sub-Revenue</h1>
-                <h1 class="text-2xl text-center mt-5 font-medium">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'])?></h1>
-            </div>
-
-            <div class="w-1/4 h-full rounded-sm border-r-4 border-red-600 bg-white shadow-lg p-2">
-                <h1 class="font-medium">Estimated Revenue</h1>
-                <h1 class="text-2xl text-center mt-5 font-medium">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'] - ($num_of_trans * 3300), 2)?></h1>
+            <div class="flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
+                </svg>
             </div>
         </div>
 
-        <div class="w-full h-4/5 flex gap-2">
-            <div class="w-1/5 h-full flex flex-col gap-2 ">
-                <div class="w-full h-1/3 rounded-sm bg-white shadow-lg p-4 flex flex-col gap-1">
-                    <h1 class="font-medium text-xs">Filter Year</h1>
-                    <form action="api/dashboardController.php" method="post" class="flex flex-col gap-1">
-                        <select name="year" id="year" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required>
-                            <option value="">--SELECT--</option>
-                            <?php 
-                            $query7 = "SELECT YEAR(date_created) as years FROM transactions GROUP BY MONTH(date_created) ORDER BY YEAR(date_created) ASC";
+        <!-- Average Sales Per Day -->
+        <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-blue-600">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-gray-700 font-semibold text-lg">Average Sales Per Day</h1>
+                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= $num_of_days == 0 ? '0' : number_format($row['total'] / $num_of_days, 0) ?></h1>
+            </div>
+            <div class="flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h6v6m-6-6V7h6v4" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Sub-Revenue -->
+        <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-yellow-600">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-gray-700 font-semibold text-lg">Sub-Revenue</h1>
+                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'])?></h1>
+            </div>
+            <div class="flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zM12 2v2m0 16v2m8-8h2M2 12H0m16.95 5.05l1.414 1.414M4.636 4.636l1.414 1.414M19.364 4.636l-1.414 1.414M6.05 17.364l-1.414 1.414" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Estimated Revenue -->
+        <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-red-600">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-gray-700 font-semibold text-lg">Estimated Revenue</h1>
+                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'] - ($num_of_trans * 3300), 2)?></h1>
+            </div>
+            <div class="flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+  <div class="w-full h-40 flex gap-6">
+    <!-- Expiring Products -->
+    <div class="w-1/3 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-yellow-500">
+        <div class="flex flex-col gap-2">
+            <h1 class="text-gray-700 font-semibold text-lg">Expiring Products</h1>
+            <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= $num_of_expiring ?></h1>
+        </div>
+        <div class="flex justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Low to Zero Stocks -->
+    <div class="w-1/3 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-red-500">
+        <div class="flex flex-col gap-2">
+            <h1 class="text-gray-700 font-semibold text-lg">Low to Zero Stocks</h1>
+            <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= $num_of_low ?></h1>
+        </div>
+            <div class="flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Filter Year -->
+        <div class="w-1/3 h-full rounded-xl bg-white shadow-lg p-4 flex flex-col justify-between border-l-4 border-green-500">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-gray-700 font-semibold text-lg">Filter Year</h1>
+                <form action="api/dashboardController.php" method="post" class="flex flex-col gap-2">
+                    <select name="year" id="year" class="w-full border h-10 text-lg outline-none px-2 border-gray-300 rounded-lg focus:border-2 focus:border-green-600" required>
+                        <option value="">--SELECT--</option>
+                        <?php 
+                            $query7 = "SELECT YEAR(created_at) as years FROM transactions GROUP BY YEAR(created_at) ORDER BY YEAR(created_at) ASC";
                             $run_query7 = mysqli_query($con, $query7);
-                            
-                            if(mysqli_num_rows($run_query7)>0){
+                            if(mysqli_num_rows($run_query7) > 0){
                                 while($row4 = mysqli_fetch_array($run_query7)){
-                                    $year = $row4['years'];
-                            ?>
-                            <option value="<?= $year?>"><?= $year?></option>
+                                    $filteryear = $row4['years'];
+                        ?>
+                        <option value="<?= $filteryear ?>"><?= $filteryear ?></option>
                         <?php
                                 }
-                            }     
-                        ?>
-                        </select>
-                        <button type="submit" name="filter_year" class="text-sm px-4 h-8 bg-blue-600 text-white font-semibold hover:bg-blue-700 active:opacity-80">Filter</button>
-                    </form>
-                </div>
-                <div class="w-full h-1/3 rounded-sm bg-white shadow-lg p-4">
-                    <h1 class="font-medium">Expiring Products</h1>
-                    <h1 class="text-5xl text-center mt-2"><?= $num_of_expiring?></h1>
-                </div>
-                <div class="w-full h-1/3 rounded-sm bg-white shadow-lg p-4">
-                    <h1 class="font-medium">Low to Zero Stocks</h1>
-                    <h1 class="text-5xl text-center mt-2"><?= $num_of_low?></h1>
-                    
-                </div>
-                
-            </div>
-            <div class="w-[33%] h-full rounded-sm bg-white shadow-lg p-2 flex flex-col gap-2 overflow-y-auto">
-                <h1 class="font-medium">Sales Last 30 Days</h1>
-                <table class="text-sm">
-                    <thead>
-                        <tr class="font-semibold bg-green-600 text-white">
-                            <td class="p-1 border">Date</td>
-                            <td class="p-1 border">Total Sales</td>
-                            <td class="p-1 border">Sub-Profit</td>
-                            <td class="p-1 border">Estimated Profit</td>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            $query5 = "SELECT SUM(total) as Total, SUM(profit) as Subprofit, date_created FROM transactions GROUP BY date_created ORDER BY date_created DESC LIMIT 30 ";
-                            $run_query5 = mysqli_query($con, $query5);
-                            
-                            if(mysqli_num_rows($run_query5)>0){
-                                while($row2 = mysqli_fetch_array($run_query5)){
-                                    $date = date('l, F j, Y', strtotime($row2['date_created']));
-                        ?>
-                        <tr class="border-b font-medium hover:bg-slate-100">
-                            <td class="p-1 border border-slate-400"><?= $date?></td>
-                            <td class="p-1 border border-slate-400"><?= $row2['Total']?></td>
-                            <td class="p-1 border border-slate-400"><?= $row2['Subprofit']?>(<?= number_format(($row2['Subprofit']/$row2['Total'])*100, 2)?>%)</td>
-                            <td class="p-1 border border-slate-400"><?= $row2['Subprofit'] - 3300?></td>
-                        </tr>
-                        <?php
-                                }
-                            }else{
-
-                              
-                        ?>
-                            <tr class="text-center">
-                                <td colspan="4" class="p-1 font-medium">No Sales Found!</td>
-                            </tr>
-                        <?php
-                             }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="w-[31%] h-full rounded-sm bg-white shadow-lg p-2 flex flex-col gap-2 overflow-y-auto">
-                <h1 class="font-medium">Sales per Month</h1>
-                <table class="text-sm">
-                    <thead>
-                        <tr class="font-semibold bg-yellow-600 text-white">
-                            <td class="p-1 border">Date</td>
-                            <td class="p-1 border">Total Sales</td>
-                            <td class="p-1 border">Sub-Profit</td>
-                            <td class="p-1 border">Estimated Profit</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                        if(isset($_GET['year'])){
-                            $query6 = "SELECT MONTH(date_created) as MM, SUM(total) as Total, SUM(profit) as Subprofit, date_created FROM transactions WHERE YEAR(date_created) = '$year' GROUP BY MONTH(date_created) ORDER BY MONTH(date_created) ASC";
-                        }else{
-                            $query6 = "SELECT MONTH(date_created) as MM, SUM(total) as Total, SUM(profit) as Subprofit, date_created FROM transactions GROUP BY MONTH(date_created) ORDER BY MONTH(date_created) ASC";
-                        }
-                            
-                            $run_query6 = mysqli_query($con, $query6);
-                            
-                            if(mysqli_num_rows($run_query6)>0){
-                                while($row3 = mysqli_fetch_array($run_query6)){
-                                    $date_created = $row3['date_created'];
-                                    $date_created = date("F", strtotime($date_created));
-                                    $MM = $row3['MM'];
-                                if(isset($_GET['year'])){
-                                    $query8 = "SELECT * FROM transactions WHERE MONTH(date_created) = '$MM' AND YEAR(date_created) = '$year' GROUP BY date_created";
-                                }else{
-                                    $query8 = "SELECT * FROM transactions WHERE MONTH(date_created) = '$MM' GROUP BY date_created";
-                                }
-                                    
-                                    $run_query8 = mysqli_query($con, $query8);
-                                    $num_days = mysqli_num_rows($run_query8);
-                        ?>
-                        <tr class="border-b font-medium hover:bg-slate-100">
-                            <td class="p-1 border border-slate-400"><?= $date_created?></td>
-                            <td class="p-1 border border-slate-400"><?= $row3['Total']?></td>
-                            <td class="p-1 border border-slate-400"><?= $row3['Subprofit']?>(<?= number_format(($row3['Subprofit']/$row3['Total'])*100, 2)?>%)</td>
-                            <td class="p-1 border border-slate-400"><?= $row3['Subprofit'] - ($num_days * 3300)?> </td>
-                        </tr>
-                        <?php
-                                }
-                            }else{ 
-                        ?>
-                            <tr class="text-center">
-                                <td colspan="4" class="p-1 font-medium">No Sales Found!</td>
-                            </tr>
-                        <?php
-                             }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="w-[16%] h-full rounded-sm bg-white shadow-lg p-2 flex flex-col gap-2 overflow-y-auto">
-                <h1 class="font-medium">10 Best Selling</h1>
-                <table class="text-sm">
-                    <thead>
-                        <tr class="font-semibold bg-blue-600 text-white">
-                            <td class="p-1 border">Product Name</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            if(isset($_GET['year'])){
-                                $query9 = "SELECT products.name, SUM(productsold.qty) as QTY FROM productsold JOIN products ON productsold.productId = products.productId WHERE YEAR(date_created) = '$year' GROUP BY productsold.productId ORDER BY SUM(productsold.qty) DESC LIMIT 10";
-
-                               
-                            }else{
-                                $query9 = "SELECT products.name, SUM(productsold.qty) as QTY FROM productsold JOIN products ON productsold.productId = products.productId GROUP BY productsold.productId ORDER BY SUM(productsold.qty) DESC LIMIT 10";
                             }
-                            
-                            $run_query9 = mysqli_query($con, $query9);
-                            
-                            if(mysqli_num_rows($run_query9)>0){
-                                while($row5 = mysqli_fetch_array($run_query9)){
                         ?>
-
-                        <tr class="border-b font-medium hover:bg-slate-100">
-                            <td class="p-1 border border-slate-400"><?= $row5['name']?> - <span class="p-0.5 rounded-sm bg-green-200"><?= $row5['QTY']?> sold</span>  </td>
-                        </tr>
-                        <?php
-                                }
-                            }else{  
-                        ?>
-                            <tr class="text-center">
-                                <td colspan="9" class="p-1 font-medium">No Products Found!</td>
-                            </tr>
-                        <?php
-                             }
-                        ?>
-                        
-                    </tbody>
-                </table>
+                    </select>
+                    <div class="flex items-center gap-4 mt-2">
+                        <button type="submit" name="filter_year" class="w-1/2 h-10 bg-blue-600 text-white font-semibold hover:bg-blue-700 active:opacity-80 rounded-lg">Filter</button>
+                        <a href="dashboard.php" class="w-1/2">
+                            <button type="button" class="w-full h-10 bg-gray-600 text-white font-semibold hover:bg-gray-700 active:opacity-80 rounded-lg">Clear</button>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
+
+        <div class="w-full h-[30rem] flex gap-6">
+            <!-- Sales per Month -->
+            <div class="w-[70%] h-full rounded-xl bg-white shadow-lg p-4 flex flex-col gap-4 overflow-y-auto">
+                <h1 class="text-xl font-semibold text-gray-700">
+                    Sales per Month <span class="text-green-600 font-medium"><?= $year ? $year : 'Overall' ?></span>
+                </h1>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-yellow-600 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Month</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Total Sales</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Sub-Profit</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Estimated Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <?php 
+                                if(isset($_GET['year'])){
+                                    $query6 = "SELECT MONTH(created_at) as MM, SUM(total) as Total, SUM(profit) as Subprofit, created_at 
+                                            FROM transactions 
+                                            WHERE YEAR(created_at) = '$year' 
+                                            GROUP BY MONTH(created_at) 
+                                            ORDER BY MONTH(created_at) ASC";
+                                } else {
+                                    $query6 = "SELECT MONTH(created_at) as MM, SUM(total) as Total, SUM(profit) as Subprofit, created_at 
+                                            FROM transactions 
+                                            GROUP BY MONTH(created_at) 
+                                            ORDER BY MONTH(created_at) ASC";
+                                }
+
+                                $run_query6 = mysqli_query($con, $query6);
+
+                                if(mysqli_num_rows($run_query6) > 0){
+                                    while($row3 = mysqli_fetch_array($run_query6)){
+                                        $month_name = date("F", mktime(0, 0, 0, $row3['MM'], 1));
+                                        $MM = $row3['MM'];
+
+                                        // Count the number of transaction days for estimated profit
+                                        if(isset($_GET['year'])){
+                                            $query8 = "SELECT * FROM transactions WHERE MONTH(created_at) = '$MM' AND YEAR(created_at) = '$year' GROUP BY created_at";
+                                        } else {
+                                            $query8 = "SELECT * FROM transactions WHERE MONTH(created_at) = '$MM' GROUP BY created_at";
+                                        }
+                                        $run_query8 = mysqli_query($con, $query8);
+                                        $num_days = mysqli_num_rows($run_query8);
+                                        $estimated = $row3['Subprofit'] - ($num_days * 3300);
+                                        $status_class = $estimated < 1 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100';
+                                    ?>
+                                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                        <td class="px-4 py-3"><?= $month_name ?></td>
+                                        <td class="px-4 py-3 font-medium"><?= number_format($row3['Total'], 0) ?></td>
+                                        <td class="px-4 py-3 font-medium"><?= number_format($row3['Subprofit'], 0) ?> 
+                                            (<?= number_format(($row3['Subprofit'] / $row3['Total']) * 100, 2) ?>%)
+                                        </td>
+                                        <td class="px-4 py-3 font-medium"><?= number_format($estimated, 2) ?></td>
+                                    </tr>
+                                    <?php
+                                    }
+                                } else {
+                            ?>
+                            <tr>
+                                <td colspan="4" class="px-4 py-3 text-center text-gray-500 font-medium">No Sales Found!</td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- best selling -->
+            <div class="w-[30%] h-full rounded-xl bg-white shadow-lg p-4 flex flex-col gap-4 overflow-y-auto">
+                <h1 class="text-xl font-semibold text-gray-700">Top 10 Best Selling Products</h1>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-blue-600 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Product Name</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Units Sold</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <?php 
+                                $query9 = "";
+                                if(isset($_GET['year']) && !empty($_GET['year'])){
+                                    $query9 = "SELECT products.name, SUM(productsold.qty) as QTY 
+                                            FROM productsold 
+                                            JOIN products ON productsold.productId = products.productId 
+                                            WHERE YEAR(productsold.date_created) = '$year' 
+                                            GROUP BY productsold.productId 
+                                            ORDER BY SUM(productsold.qty) DESC 
+                                            LIMIT 10";
+                                } else {
+                                    $query9 = "SELECT products.name, SUM(productsold.qty) as QTY 
+                                            FROM productsold 
+                                            JOIN products ON productsold.productId = products.productId 
+                                            GROUP BY productsold.productId 
+                                            ORDER BY SUM(productsold.qty) DESC 
+                                            LIMIT 10";
+                                }
+
+                                $run_query9 = mysqli_query($con, $query9);
+
+                                if(mysqli_num_rows($run_query9) > 0){
+                                    while($row5 = mysqli_fetch_array($run_query9)){
+                            ?>
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-4 py-3 font-medium"><?= $row5['name'] ?></td>
+                                <td class="px-4 py-3 font-medium">
+                                    <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800"><?= $row5['QTY'] ?> sold</span>
+                                </td>
+                            </tr>
+                            <?php
+                                    }
+                                } else {  
+                            ?>
+                            <tr>
+                                <td colspan="2" class="px-4 py-3 text-center text-gray-500 font-medium">No Products Found!</td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sales Last 30 Day -->
+            <div class="w-full h-[30rem] rounded-xl bg-white shadow-lg p-6 flex flex-col gap-4 overflow-y-auto">
+                <h1 class="text-xl font-semibold text-gray-700">Sales Last 30 Days</h1>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-green-600 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Date</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Total Sales</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Sub-Profit</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Estimated Profit</th>
+                                <th class="px-4 py-3 text-left font-semibold text-white uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <?php 
+                                $query5 = "SELECT SUM(total) as Total, SUM(profit) as Subprofit, created_at 
+                                        FROM transactions 
+                                        GROUP BY created_at 
+                                        ORDER BY created_at DESC 
+                                        LIMIT 30";
+                                $run_query5 = mysqli_query($con, $query5);
+
+                                if(mysqli_num_rows($run_query5) > 0){
+                                    while($row2 = mysqli_fetch_array($run_query5)){
+                                        $date = date('M d, Y', strtotime($row2['created_at']));
+                                        $estimated = $row2['Subprofit'] - 3300;
+                                        $status_class = $estimated < 1 ? 'text-red-600 bg-red-100' : 'text-green-600 bg-green-100';
+                                        $status_text = $estimated < 1 ? 'Loss' : 'Gain';
+                            ?>
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-4 py-3"><?= $date ?></td>
+                                <td class="px-4 py-3 font-medium"><?= number_format($row2['Total'], 0) ?></td>
+                                <td class="px-4 py-3 font-medium"><?= number_format($row2['Subprofit'], 0) ?> 
+                                    (<?= number_format(($row2['Subprofit'] / $row2['Total']) * 100, 2) ?>%)
+                                </td>
+                                <td class="px-4 py-3 text-sm font-medium"><?= number_format($estimated, 2) ?></td>
+                                <td class="px-4 py-3">
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold <?= $status_class ?>"><?= $status_text ?></span>
+                                </td>
+                            </tr>
+                            <?php
+                                    }
+                                } else {
+                            ?>
+                            <tr>
+                                <td colspan="5" class="px-4 py-3 text-center text-gray-500 font-medium">No Sales Found!</td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
     </div>
 </div>
 

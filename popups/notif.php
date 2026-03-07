@@ -1,5 +1,5 @@
-<div class="notif w-[25rem] h-[20rem] flex-col absolute z-50 top-10 right-10 bg-white shadow-lg border rounded-sm px-1 pb-1 overflow-y-auto">
-    <div class="w-full py-1 flex items-center justify-between px-2 sticky top-0 bg-white">
+<div class="notif w-[25rem] h-[20rem] flex-col fixed z-50 top-12 right-10 border bg-white shadow-lg rounded-lg overflow-y-auto">
+    <div class="w-full py-2 px-4 flex items-center justify-between sticky top-0 bg-white">
         <h1 class="bg-white font-medium">Notifications</h1>
         <a href="api/notifController.php" class="text-sm font-medium text-blue-600 hover:underline">Mark all as read</a>
     </div>
@@ -11,7 +11,7 @@
         if(mysqli_num_rows($run_query11)>0){
             while($row = mysqli_fetch_array($run_query11)){
     ?>
-        <a href="api/notifController.php?id=<?= $row['notifId']?>" class="w-full h-auto border-y <?= $row['status'] == 'UNREAD' ? 'bg-slate-100' : ''?> flex items-center hover:bg-slate-100 py-2 px-2 gap-2 font-medium active:opacity-80"><img src="imgs/<?= $row['category'] == 'Expiry' ? 'time' : 'out-of-stock'?>.png" class="w-7 h-7"/>
+        <a href="api/notifController.php?id=<?= $row['notifId']?>" class="w-full h-auto border-y <?= $row['status'] == 'UNREAD' ? 'bg-green-50' : ''?> flex items-center hover:bg-green-100 py-2 px-2 gap-2 font-medium active:opacity-80"><img src="imgs/<?= $row['category'] == 'Expiry' ? 'time' : 'out-of-stock'?>.png" class="w-7 h-7"/>
         <h1><?= $row['title']?> <br><span class="text-xs text-neutral-700"><?= $row['description']?></span></h1></a>
     <?php
          }}else{

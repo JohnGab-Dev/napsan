@@ -14,45 +14,83 @@ require 'popups/addProd.php';
 require 'popups/alerts.php';
 require 'methods/checkInvent.php';
 ?>
-    <div class="w-full h-screen pt-10 p-2">
-        <div class="w-full h-full bg-white shadow-md rounded-sm p-4 flex flex-col gap-4">
+    <div class="w-full h-screen pt-20 px-4 pb-4">
+        <div class="w-full h-full bg-white shadow-lg rounded-lg p-6 flex flex-col gap-4">
             <div class="w-full h-10rem flex justify-between">
-                <div class="w-auto h-auto flex items-center font-medium">
-                    <a href="inventory.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 border-green-600 bg-slate-100">Products Inventory</a>
-                    <a href="stocks.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 ">Stocks Del</a>
-                    <a href="low_stock.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 ">Low Stocks</a>
-                    <a href="expiring.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 ">Expiring Products</a>
+                <div class="flex flex-wrap items-center gap-2 font-medium">
 
-                    <button type="button" class="add flex items-center gap-2 ml-2 px-2 py-1 bg-green-600 text-white rounded-sm hover:bg-green-700 active:opacity-80">Add New Product</button>
-                </div>
+                <!-- Tabs -->
+                <a href="inventory.php" class="px-4 py-2 rounded-t-md border-b-2 border-green-600 bg-green-50 text-green-800 hover:bg-green-100 transition">
+                    Products Inventory
+                </a>
+                <a href="stocks.php" class="px-4 py-2 rounded-t-md border-b-2 border-transparent hover:border-green-600 hover:bg-green-50 transition">
+                    Stocks Del
+                </a>
+                <a href="low_stock.php" class="px-4 py-2 rounded-t-md border-b-2 border-transparent hover:border-green-600 hover:bg-green-50 transition">
+                    Low Stocks
+                </a>
+                <a href="expiring.php" class="px-4 py-2 rounded-t-md border-b-2 border-transparent hover:border-green-600 hover:bg-green-50 transition">
+                    Expiring Products
+                </a>
+
+                <!-- Add Button -->
+                <button type="button" class="add ml-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 active:opacity-80 transition flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Add New Product
+                </button>
+
+            </div>
 
             <form action="api/searchController.php" method="post" class="w-2/5 flex items-center">
-                <div class="w-4/5 h-10 bg-slate-100 flex items-center gap-2 px-2 rounded-sm hover:bg-slate-200">
-                    <input type="text" name="search" class="w-11/12 outline-none py-1 bg-slate-100 focus:border-b-2 focus:border-green-600 px-2" placeholder="search here..." autofocus id="myInput" onkeyup="myFunction()">
-                    <img src="imgs/search.png" alt="" class="w-7">
-                </div>
-                <button type="submit" name="findProd" class="text-base h-10 w-2/12 p-1 rounded-sm bg-green-600 hover:bg-green-700 text-white active:opacity-80 font-medium">Search</button>
-                
+                <!-- Search Container -->
+                    <div class="relative w-full">
+                        <!-- Search Icon -->
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                            </svg>
+                        </div>
+
+                        <!-- Input -->
+                        <input 
+                            type="text" 
+                            name="search" 
+                            id="myInput" 
+                            onkeyup="myFunction()" 
+                            placeholder="Search products..." 
+                            autofocus
+                            class="w-full rounded-xl bg-gray-100 pl-10 pr-4 py-3 text-gray-700 placeholder-gray-400 shadow-sm focus:bg-white focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        >
+
+                        <!-- Submit Button -->
+                        <button type="submit" name="findProd" class="absolute right-0 top-0 h-full px-6 bg-green-600 rounded-r-xl text-white font-semibold hover:bg-green-700 transition">
+                            Search
+                        </button>
+                    </div>
             </form>
                 
             </div>  
 
             <div class="w-full h-[90%] overflow-y-auto">
-                <table class="w-full font-medium" id="myTable">
-                    <thead>
-                        <tr class="border-y bg-green-600 text-white">
-                            
-                            <th class="p-1 text-left">Product Name</th>
-                            <th class="p-1 text-left">Stocks</th>
-                            <th class="p-1 text-left">SRP</th> 
-                            <th class="p-1 text-left">Capital</th> 
-                            <th class="p-1 text-left">Distributor</th>
-                            <th class="p-1 text-left">Status</th>
-                            <th class="p-1 text-left">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                <div class="w-full">
+                    <table id="myTable" class="w-full text-left border-collapse">
+                        <thead class="bg-green-600 text-white">
+                            <tr>
+                                <th class="p-3 rounded-tl-lg">Product Name</th>
+                                <th class="p-3">Stocks</th>
+                                <th class="p-3">SRP</th>
+                                <th class="p-3">Capital</th>
+                                <th class="p-3">Distributor</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 rounded-tr-lg">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <?php
+                             
                             if(!isset($_GET['search'])){
                                 if(isset($_GET['page'])){
                                     $page = mysqli_real_escape_string($con, $_GET['page']);
@@ -69,66 +107,73 @@ require 'methods/checkInvent.php';
                             }
                             $run_query = mysqli_query($con, $query);
                             $num_of_rows = mysqli_num_rows($run_query);
+                                    
                             if($num_of_rows>0){
                                 while($row = mysqli_fetch_array($run_query)){
-                                    
-                        ?>
-                        
-                        <tr class="border-b border-slate-400 hover:bg-slate-100">
-                            <td class="p-1 text-sm"><?= $row['name']?></td>
-                            <td class="p-1"><?= $row['qty']?></td>
-                            <td class="p-1"><?= $row['srp']?></td>
-                            <td class="p-1"><?= $row['capital']?></td>
-                            <td class="p-1"><?= $row['distributor']?></td>
-                            <?php 
-                                if($row['status'] == 'Good'){
-                                    $color = 'bg-green-200';
-                                }else if($row['status'] == 'Low Stocks'){
-                                    $color = 'bg-yellow-200';
-                                }else if($row['status'] == 'hidden'){
-                                    $color = 'bg-neutral-200';
-                                }else{
-                                    $color = 'bg-red-200';
-                                } 
+                                    if($row['status'] == 'Good'){
+                                        $color = 'bg-green-200 text-green-800';
+                                    } else if($row['status'] == 'Low Stocks'){
+                                        $color = 'bg-yellow-200 text-yellow-800';
+                                    } else if($row['status'] == 'hidden'){
+                                        $color = 'bg-gray-200 text-gray-800';
+                                    } else {
+                                        $color = 'bg-red-200 text-red-800';
+                                    }
                             ?>
-                            <td class="p-1"><span class="px-2 <?= $color?> rounded-sm text-sm"><?= $row['status']?></span></td>
-                            <td class="p-1 flex items-center gap-2">
-                                <button type="button" onclick="openAdd(<?= $row['productId'];?>)" type="button" class="text-xs p-1 rounded-sm bg-green-600 hover:bg-green-700 text-white active:opacity-80">Add</button>
-                                <?php require 'popups/addStock.php';?>
-                                <button type="button" onclick="editProd(<?= $row['productId']?>)" class="text-xs p-1 rounded-sm bg-blue-600 hover:bg-blue-700  text-white active:opacity-80">Edit</button>
-                                <?php require 'popups/editProd.php';?>
-                                <?php if($_SESSION['user']['role'] == 'admin'){?>
-                                    <button type="button" onclick="warnDel(<?= $row['productId']?>)" class="text-xs p-1 rounded-sm bg-red-600 hover:bg-red-700  text-white active:opacity-80">Del</button>
-                                    <?php require 'popups/warnDel.php';?>
-                                <?php }?>
-                                
-                                <form action="api/ProductController.php?id=<?= $row['productId']?>" method="post">
-                                    <?php  if($row['status'] != 'hidden'){?>
-                                    <button type="submit" name="hide" class="text-xs p-1 rounded-sm bg-amber-600 hover:bg-amber-700 text-white active:opacity-80">Hide</button>
-                                    <?php }else{?>
-                                    <button type="submit" name="unhide" class="text-xs p-1 rounded-sm bg-neutral-600 hover:bg-neutral-700 text-white active:opacity-80">Unhide</button>
-                                    <?php }?>
-                                </form>
-                                
-                            </td>
-                            
-                        </tr>
-                    <?php }}else{?>
-                        <tr class="text-center">
-                            <td colspan="7" class="p-1 font-medium">No Products Found!</td>
-                        </tr>
-                    <?php }?> 
-                    </tbody>
-                </table>
-                <?php if(!isset($_GET['search'])){?>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="p-2 font-medium"><?= $row['name']?></td>
+                                <td class="p-2"><?= $row['qty']?></td>
+                                <td class="p-2"><?= $row['srp']?></td>
+                                <td class="p-2"><?= $row['capital']?></td>
+                                <td class="p-2"><?= $row['distributor']?></td>
+                                <td class="p-2">
+                                    <span class="px-2 py-1 rounded-full text-xs <?= $color ?>"><?= $row['status']?></span>
+                                </td>
+                                <td class="p-2 flex flex-wrap gap-2">
+                                    <button type="button" onclick="openAdd(<?= $row['productId'];?>)" class="text-xs px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md transition">Add</button>
+                                    <?php require 'popups/addStock.php';?>
+                                    <button type="button" onclick="editProd(<?= $row['productId']?>)" class="text-xs px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">Edit</button>
+                                    <?php require 'popups/editProd.php';?>
+                                    <?php if($_SESSION['user']['role'] == 'admin'){ ?>
+                                        <button type="button" onclick="warnDel(<?= $row['productId']?>)" class="text-xs px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md transition">Del</button>
+                                        <?php require 'popups/warnDel.php';?>
+                                    <?php } ?>
+                                    <form action="api/ProductController.php?id=<?= $row['productId']?>" method="post">
+                                        <?php if($row['status'] != 'hidden'){ ?>
+                                            <button type="submit" name="hide" class="text-xs px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-md transition">Hide</button>
+                                        <?php }else{ ?>
+                                            <button type="submit" name="unhide" class="text-xs px-2 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition">Unhide</button>
+                                        <?php } ?>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php }} else { ?>
+                            <tr>
+                                <td colspan="7" class="p-4 text-center text-gray-500 font-medium">No Products Found!</td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php 
+
+                     $query1 = "SELECT * FROM products";
+                     $run_query1 = mysqli_query($con, $query1);
+                    if(!isset($_GET['search']) &&  mysqli_num_rows($run_query1)>20){
+                ?>
                 <div class="w-full h-auto flex items-center justify-end py-4 px-2 gap-2">
-                    <a href="inventory.php?page=<?= isset($_GET['page']) ? $_GET['page'] - 1 : -1;?>" class="<?= $currPage == 0 ? 'hidden' : ''?>"><button class="bg-slate-200 p-1 rounded-sm hover:bg-slate-300 font-medium active:opacity-80">< Previous</button></a>
-                    <a href="inventory.php?page=<?= isset($_GET['page']) ? $_GET['page'] + 1 : 1;?>"><button class="bg-slate-200 p-1 rounded-sm hover:bg-slate-300 font-medium active:opacity-80">Next ></button></a>
+                    <a href="inventory.php?page=<?= isset($_GET['page']) ? $_GET['page'] - 1 : -1;?>" class="<?= $currPage == 0 ? 'hidden' : ''?>">
+                        <button class="px-3 py-1 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition font-medium active:opacity-80">&lt; Previous</button>
+                    </a>
+                    <a href="inventory.php?page=<?= isset($_GET['page']) ? $_GET['page'] + 1 : 1;?>">
+                        <button class="px-3 py-1 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition font-medium active:opacity-80">Next &gt;</button>
+                    </a>
                 </div>
                 <?php }?>
             </div>
             
         </div>
+
     </div>
 <script>
 function myFunction() {
