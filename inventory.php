@@ -34,7 +34,7 @@ require 'methods/checkInvent.php';
                 </a>
 
                 <!-- Add Button -->
-                <button type="button" class="add ml-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 active:opacity-80 transition flex items-center gap-2">
+                <button type="button" onclick="openModal()" class="add ml-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 active:opacity-80 transition flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -134,7 +134,7 @@ require 'methods/checkInvent.php';
                                     <?php require 'popups/addStock.php';?>
                                     <button type="button" onclick="editProd(<?= $row['productId']?>)" class="text-xs px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">Edit</button>
                                     <?php require 'popups/editProd.php';?>
-                                    <?php if($_SESSION['user']['role'] == 'admin'){ ?>
+                                    <?php if($_SESSION['user']['role'] == 'superadmin'){ ?>
                                         <button type="button" onclick="warnDel(<?= $row['productId']?>)" class="text-xs px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md transition">Del</button>
                                         <?php require 'popups/warnDel.php';?>
                                     <?php } ?>
@@ -176,31 +176,31 @@ require 'methods/checkInvent.php';
 
     </div>
 <script>
-function myFunction() {
-  var input, filter, table, tr, td, i, j, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
+    function myFunction() {
+        var input, filter, table, tr, td, i, j, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
 
-  // Start from i = 1 to skip the header row
-  for (i = 1; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td");
-    let rowContainsFilter = false;
+        // Start from i = 1 to skip the header row
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            let rowContainsFilter = false;
 
-    for (j = 0; j < td.length; j++) {
-      if (td[j]) {
-        txtValue = td[j].textContent || td[j].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          rowContainsFilter = true;
-          break;
+            for (j = 0; j < td.length; j++) {
+            if (td[j]) {
+                txtValue = td[j].textContent || td[j].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                rowContainsFilter = true;
+                break;
+                }
+            }
+            }
+
+            tr[i].style.display = rowContainsFilter ? "" : "none";
         }
-      }
     }
-
-    tr[i].style.display = rowContainsFilter ? "" : "none";
-  }
-}
 
     function openAdd(n){
         const addStock = document.querySelector(".addStock" + n);

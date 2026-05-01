@@ -52,7 +52,7 @@ require 'methods/checkInvent.php';
             <div class="w-full px-2 py-2"></div>
 
             <div class="w-full h-[83%] overflow-y-auto">
-                <table class="w-full font-medium text-sm border-separate border-spacing-0">
+                <table id="myTable" class="w-full font-medium text-sm border-separate border-spacing-0">
                     <thead>
                         <tr class="bg-green-600 text-white uppercase tracking-wide text-left">
                             <th class="p-3">Product Name</th>

@@ -1,36 +1,55 @@
-<div class="bg1 editCart<?= $row1['cartId']?> hidden w-full h-screen z-50 items-center justify-center absolute top-0 right-0 left-0">
-    <form action="api/POSController.php?id=<?= $row1['cartId']?>" method="POST" class="w-2/6 h-5/5 bg-white rounded-sm p-5 flex flex-col gap-4">
-        <div class="w-full h-auto flex justify-between">
+<div class="bg1 editCart<?= $row1['cartId']?> hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+
+    <form action="api/POSController.php?id=<?= $row1['cartId']?>" method="POST" 
+        class="w-full max-w-md bg-white rounded-xl shadow-2xl p-6 flex flex-col gap-6 animate-fadeIn">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b pb-3">
             <div>
-                <h1 class="font-medium">Edit products cart</h1>
-                <h1 class="font-medium text-sm underline">for <?= $row1['name']?></h1>
-                <p class="text-xs">Please fill all fields</p>
+                <h1 class="text-lg font-semibold">Edit Cart Item</h1>
+                <p class="text-sm text-gray-500">for <?= $row1['name']?></p>
             </div>
-            <img src="imgs/close-n.png" onclick="closeEdit(<?= $row1['cartId']?>)" alt="" class=" w-7 h-7 p-2 cursor-pointer rounded-sm hover:bg-slate-100 active:opacity-80">
+
+            <button type="button" onclick="closeEdit(<?= $row1['cartId']?>)" 
+                class="text-xl font-bold hover:text-red-500 transition">
+                &times;
+            </button>
         </div>
+
+        <!-- Alert -->
         <?php if(isset($_SESSION['error'])){ ?>
-                <div class="alert flex w-full h-5/5 bg-red-200 border-l-4 border-red-600 items-center justify-between px-2 text-sm p-1 rounded-sm">
-                    <h1><?= $_SESSION['error'];?></h1>
-                    <button type="button" class="close<?= $row1['cartId']?> p-1 hover:bg-slate-100 active:opacity-80"><img src="imgs/close-n.png" class="w-3 h-3" alt=""></button>
-                </div>
-                <script>
-                    const alert = document.querySelector(".alert");
-                    const close = document.querySelector(".close");
+            <div class="flex items-center justify-between bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-2 rounded-md text-sm shadow-sm">
+                <span><?= $_SESSION['error'];?></span>
+                <button type="button" class="text-lg closeAlert">&times;</button>
+            </div>
+        <?php unset($_SESSION['error']); } ?>
 
-                    close.addEventListener("click", ()=> {
-                        alert.classList.replace('flex','hidden');
-                    })
-                </script>
-        <?php unset($_SESSION['error']); }?>
-
-                <div class="">
-                    <label for="qty">QTY</label>
-                    <input type="number" min="0" name="qty" id="qty" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required value="<?= $row1['Cqty']?>">
-                </div>
-
-        <div class="w-full flex justify-end">
-            <button type="submit" name="editCart" class=" px-4 h-8 bg-green-600 text-white font-semibold hover:bg-green-700 active:opacity-80">Save Changes</button>
+        <!-- Form -->
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-gray-600">Quantity</label>
+            <input 
+                type="number" 
+                name="qty" 
+                min="0" 
+                required 
+                value="<?= $row1['Cqty']?>"
+                class="rounded-lg border border-gray-300 px-4 py-2 bg-gray-100 
+                focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+            >
         </div>
-        
+
+        <!-- Footer -->
+        <div class="flex justify-end gap-2 pt-4 border-t">
+            <button type="button" onclick="closeEdit(<?= $row1['cartId']?>)" 
+                class="px-4 py-2 rounded-md border hover:bg-gray-100">
+                Cancel
+            </button>
+
+            <button type="submit" name="editCart"
+                class="px-5 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition">
+                Save Changes
+            </button>
+        </div>
+
     </form>
 </div>
