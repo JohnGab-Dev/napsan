@@ -13,7 +13,6 @@ require 'popups/profile.php';
 require 'popups/filter.php';
 require 'popups/delSold.php';
 require 'popups/alerts.php';
-
 ?>
 
 
@@ -36,6 +35,12 @@ require 'popups/alerts.php';
             <a href="notifSettings.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
                 Notifications
             </a>
+            <!-- <a href="repriceOH.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Replace Overhead
+            </a>
+            <a href="backup.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Backup
+            </a> -->
         </div>
     </div>
 

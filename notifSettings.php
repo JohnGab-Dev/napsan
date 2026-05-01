@@ -35,6 +35,12 @@ require 'popups/alerts.php';
             <a href="notifSettings.php" class="px-3 py-2 rounded-md bg-green-50 text-green-700 border-l-4 border-green-600">
                 Notifications
             </a>
+            <!-- <a href="repriceOH.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Replace Overhead
+            </a>
+            <a href="backup.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Backup
+            </a> -->
         </div>
     </div>
 
@@ -49,7 +55,7 @@ require 'popups/alerts.php';
             </div>
 
             <?php if($_SESSION['user']['role'] == 'admin'){ ?>
-                <button class="delAll px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition shadow-sm">
+                <button onclick="openDel()" class="delAll px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition shadow-sm">
                     Delete All
                 </button>
             <?php } ?>
@@ -175,6 +181,13 @@ require 'popups/alerts.php';
 
         tr[i].style.display = rowContainsFilter ? "" : "none";
     }
+    }
+    function openDel(){
+         document.querySelector(".delNotifui").classList.replace('hidden', 'flex')
+    }
+
+    function closeDel(){
+        document.querySelector(".delNotifui").classList.replace('flex', 'hidden')
     }
 </script>
 
