@@ -1,35 +1,43 @@
-<div class="bg1 delNotifui w-full h-screen z-50 items-center justify-center absolute top-0">
-    <form action="api/SettingsController.php" method="POST" class="w-2/6 h-5/5 bg-white rounded-sm p-5 flex flex-col gap-4">
-        <div class="w-full h-auto flex justify-between">
-            <div class="w-full py-2 bg-red-200 rounded-sm border-l-4 border-red-600 px-4">
-                <h1 class="font-medium text-lg">Warning</h1>
-                <p class="text-xs">If you delete this, all sales data will be gone permanently!</p>
-            </div>
+<div class="bg1 delNotifui hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 items-center justify-center px-4">
+
+    <form action="api/SettingsController.php" method="POST"
+        class="w-full max-w-md bg-white rounded-xl shadow-2xl p-6 flex flex-col gap-6 animate-fadeIn">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b pb-3">
+            <h1 class="text-lg font-semibold text-red-600">Delete Notifications</h1>
+
+            <button type="button" onclick="closeDel()" class="delclose text-xl font-bold hover:text-red-500 transition">
+                &times;
+            </button>
         </div>
-        <h1 class="text-2xl font-medium text-center">Are you sure you want to delete all notifications?</h1>
-        <div class="w-full flex justify-end items-center gap-4 mt-5">
-            <button type="button" class="delclose py-3 px-6 bg-neutral-600 text-white font-semibold hover:bg-neutral-700 active:opacity-80 text-lg rounded-sm">No</button>
-            <button type="submit" name="delNotifAll" class=" py-3 px-6 text-lg  bg-red-600 text-white font-semibold hover:bg-red-700 active:opacity-80 rounded-sm">Yes</button>
+
+        <!-- Warning Box -->
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-md text-sm">
+            <strong>Warning:</strong> This will permanently delete all notifications. This action cannot be undone.
         </div>
-        
+
+        <!-- Confirmation Text -->
+        <div class="text-center">
+            <h2 class="text-lg font-medium text-gray-700">
+                Are you sure you want to proceed?
+            </h2>
+            <p class="text-sm text-gray-500 mt-1">
+                All notification records will be removed permanently.
+            </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-2 pt-4 border-t">
+            <button type="button" onclick="closeDel()" class="delclose px-4 py-2 rounded-md border hover:bg-gray-100">
+                Cancel
+            </button>
+
+            <button type="submit" name="delNotifAll"
+                class="px-5 py-2 bg-red-600 text-white rounded-md font-semibold hover:bg-red-700 transition">
+                Delete All
+            </button>
+        </div>
+
     </form>
 </div>
-
-
-<script>
-     document.addEventListener("DOMContentLoaded", () => {
-        const delDisp = document.querySelector(".delNotifui");
-        const delclose = document.querySelector(".delclose");
-        const delBtn = document.querySelector(".delAll");
-
-
-    delBtn.addEventListener("click", () => {
-            delDisp.classList.add("active");
-        });
-
-        delclose.addEventListener("click", () => {
-            delDisp.classList.remove("active");
-        });
-    });
-
-</script>

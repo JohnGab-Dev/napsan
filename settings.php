@@ -34,6 +34,12 @@ require 'popups/filter.php';
             <a href="notifSettings.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
                 Notifications
             </a>
+            <!-- <a href="repriceOH.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Replace Overhead
+            </a>
+            <a href="backup.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Backup
+            </a> -->
         </div>
     </div>
 
@@ -115,13 +121,5 @@ require 'popups/filter.php';
     </div>
 
 </div>
-
-<!-- <script>
-    document.querySelectorAll(".close, .closeM").forEach(button => {
-        button.addEventListener("click", () => {
-            button.closest(".alert, .alertM").classList.replace('flex','hidden');
-        });
-    });
-</script> -->
 
 <?php include 'partials/__footer.php';?>
