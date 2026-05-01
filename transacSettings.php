@@ -75,9 +75,9 @@ require 'popups/alerts.php';
         </div>
 
         <!-- Table -->
-        <div class="w-full h-full overflow-hidden border rounded-lg">
+        <div class="w-full h-full overflow-hidden border rounded-lg overflow-y-auto">
 
-            <div class="overflow-y-auto h-[75vh]">
+            <div class="">
                 <table class="w-full text-sm" id="myTable">
                     <thead class="bg-green-600 text-white sticky top-0">
                         <tr>
