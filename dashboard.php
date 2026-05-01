@@ -75,7 +75,7 @@ require 'methods/checkInvent.php';
         <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-green-600">
             <div class="flex flex-col gap-2">
                 <h1 class="text-gray-700 font-semibold text-lg">Total Products</h1>
-                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= number_format($num_of_products, 0)?></h1>
+                <h1 class="text-4xl text-center text-gray-900 mt-4"><?= number_format($num_of_products, 0)?></h1>
             </div>
             <div class="flex justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -88,7 +88,7 @@ require 'methods/checkInvent.php';
         <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-blue-600">
             <div class="flex flex-col gap-2">
                 <h1 class="text-gray-700 font-semibold text-lg">Average Sales Per Day</h1>
-                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= $num_of_days == 0 ? '0' : number_format($row['total'] / $num_of_days, 0) ?></h1>
+                <h1 class="text-4xl text-center text-gray-900 mt-4"><?= $num_of_days == 0 ? 0 : number_format($row['total'] / $num_of_days, 0) ?></h1>
             </div>
             <div class="flex justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,7 +101,7 @@ require 'methods/checkInvent.php';
         <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-yellow-600">
             <div class="flex flex-col gap-2">
                 <h1 class="text-gray-700 font-semibold text-lg">Sub-Revenue</h1>
-                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'])?></h1>
+                <h1 class="text-4xl text-center text-gray-900 mt-4">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'])?></h1>
             </div>
             <div class="flex justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -114,7 +114,7 @@ require 'methods/checkInvent.php';
         <div class="w-1/4 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-red-600">
             <div class="flex flex-col gap-2">
                 <h1 class="text-gray-700 font-semibold text-lg">Estimated Revenue</h1>
-                <h1 class="text-4xl font-bold text-center text-gray-900 mt-4">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'] - ($num_of_trans * 3300), 2)?></h1>
+                <h1 class="text-4xl text-center text-gray-900 mt-4">P <?= $num_of_trans == 0 ? '0': number_format($row15['prof'] - ($num_of_trans * 3300), 2)?></h1>
             </div>
             <div class="flex justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -129,7 +129,7 @@ require 'methods/checkInvent.php';
     <div class="w-1/3 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-yellow-500">
         <div class="flex flex-col gap-2">
             <h1 class="text-gray-700 font-semibold text-lg">Expiring Products</h1>
-            <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= $num_of_expiring ?></h1>
+            <h1 class="text-4xl text-center text-gray-900 mt-4"><?= $num_of_expiring ?></h1>
         </div>
         <div class="flex justify-end">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -142,7 +142,7 @@ require 'methods/checkInvent.php';
     <div class="w-1/3 h-full rounded-xl bg-white shadow-lg p-6 flex flex-col justify-between border-l-4 border-red-500">
         <div class="flex flex-col gap-2">
             <h1 class="text-gray-700 font-semibold text-lg">Low to Zero Stocks</h1>
-            <h1 class="text-4xl font-bold text-center text-gray-900 mt-4"><?= $num_of_low ?></h1>
+            <h1 class="text-4xl text-center text-gray-900 mt-4"><?= $num_of_low ?></h1>
         </div>
             <div class="flex justify-end">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -290,7 +290,7 @@ require 'methods/checkInvent.php';
                             <tr class="hover:bg-gray-50 transition-colors duration-200">
                                 <td class="px-4 py-3 font-medium"><?= $row5['name'] ?></td>
                                 <td class="px-4 py-3 font-medium">
-                                    <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800"><?= $row5['QTY'] ?> sold</span>
+                                    <span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800"><?= number_format($row5['QTY']) ?> sold</span>
                                 </td>
                             </tr>
                             <?php

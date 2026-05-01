@@ -16,17 +16,19 @@
 
 
 <script>
-    const prof = document.querySelector(".prof");
-    const user = document.querySelector(".user");
+    document.addEventListener("DOMContentLoaded", () => {
+        const prof = document.querySelector(".prof");
+        const user = document.querySelector(".user");
 
-    user.addEventListener("click", () => {
-        prof.classList.toggle("active");
+        user.addEventListener("click", () => {
+            prof.classList.toggle("active");
+        });
+
+        window.addEventListener("click", (event) => {
+            if (!prof.contains(event.target) && !user.contains(event.target)) {
+                prof.classList.remove("active");
+            }
+        }); 
     });
-
-    window.addEventListener("click", (event) => {
-        if (!prof.contains(event.target) && !user.contains(event.target)) {
-            prof.classList.remove("active");
-        }
-    }); 
 
 </script>

@@ -17,99 +17,138 @@ require 'popups/alerts.php';
 ?>
 
 
-<div class="w-full h-screen pt-10 flex px-4">
-    <div class="w-[20%] h-full border-r py-10 flex flex-col gap-16">
-        <h1 class="font-medium text-lg px-2">SETTINGS</h1>
+<div class="w-full h-screen pt-20 px-4 pb-4 flex gap-4">
+    <!-- Sidebar -->
+    <div class="w-[22%] bg-white shadow-lg rounded-lg p-5 flex flex-col gap-6">
+        <h1 class="font-semibold text-gray-700 text-lg">Settings</h1>
 
-        <div class="w-full h-5/5 flex flex-col font-medium">
-            <a href="settings.php" class="w-full px-1 py-2 hover:bg-white">
+        <div class="flex flex-col gap-2 text-sm font-medium">
+            <a href="settings.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
                 Change Password
             </a>
-            <a href="changeRec.php" class="w-full px-1 py-2 hover:bg-white">
-                Change Recovery Code
+            <a href="changeRec.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
+                Recovery Code
             </a>
-            <a href="transacSettings.php" class="w-full px-1 py-2 hover:bg-white">
+            <a href="transacSettings.php" class="px-3 py-2 rounded-md hover:bg-gray-100 transition">
                 Transactions
             </a>
-            <a href="notifSettings.php" class="w-full px-1 py-2 bg-white hover:bg-white">
+            <a href="notifSettings.php" class="px-3 py-2 rounded-md bg-green-50 text-green-700 border-l-4 border-green-600">
                 Notifications
             </a>
         </div>
     </div>
-    <div class="w-[80%] h-full p-4 flex flex-col gap-2">
-        <div class="w-auto h-auto flex items-center justify-between font-medium">
-                <h1 class="font-medium">Manage Notifications</h1>
-                <?php if($_SESSION['user']['role'] == 'admin'){?>
-                <button class="delAll ml-2 px-2 py-1 rounded-sm bg-red-600 font-medium text-white hover:bg-red-700 active:opacity-80">Delete All</button>
-                <?php }?>
-        </div>
-        <div class="w-full h-[95%] bg-white shadow-md rounded-sm p-4 flex flex-col gap-4">
-            <div class="w-full h-10rem flex justify-between">
-                <h1 class="font-medium">Products Sold Per Transaction</h1>
-                <div class="w-2/5 h-10 bg-slate-100 flex items-center gap-2 px-2 rounded-sm hover:bg-slate-200">
-                    <input type="text" class="w-11/12 outline-none py-1 bg-slate-100 focus:border-b-2 focus:border-green-600 px-2" placeholder="search here..." autofocus id="myInput" onkeyup="myFunction()">
-                    <img src="imgs/search.png" alt="" class="w-7">
-                </div>
-            </div>  
 
-            <div class="w-full h-full overflow-y-auto">
-                <table class="w-full font-medium" id="myTable">
-                    <thead>
-                        <tr class="border-y bg-green-600 text-white">
-                            <th class="p-1 text-left">Title</th>
-                            <th class="p-1 text-left">Description</th>
-                            <th class="p-1 text-left">Status</th>
-                            <th class="p-1 text-left">Date</th>
+    <!-- Main Content -->
+    <div class="w-[78%] bg-white shadow-lg overflow-hidden rounded-lg p-6 flex flex-col gap-6">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-semibold text-gray-700">Manage Notifications</h1>
+                <p class="text-sm text-gray-500">View and manage all system notifications</p>
+            </div>
+
+            <?php if($_SESSION['user']['role'] == 'admin'){ ?>
+                <button class="delAll px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 transition shadow-sm">
+                    Delete All
+                </button>
+            <?php } ?>
+        </div>
+
+        <!-- Search -->
+        <div class="flex justify-between items-center">
+            <h2 class="text-md font-medium text-gray-600">Notification List</h2>
+
+            <div class="w-[40%] flex items-center gap-2 px-3 py-2 border rounded-lg bg-gray-50 focus-within:ring-2 focus-within:ring-green-500">
+                <input 
+                    type="text" 
+                    id="myInput"
+                    onkeyup="myFunction()" 
+                    placeholder="Search notifications..." 
+                    class="w-full bg-transparent outline-none text-sm"
+                >
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="w-full h-full border rounded-lg flex flex-col overflow-y-auto">
+
+            <div class="">
+                <table class="w-full text-sm" id="myTable">
+                    <thead class="bg-green-600 text-white sticky top-0">
+                        <tr>
+                            <th class="p-3 text-left">Title</th>
+                            <th class="p-3 text-left">Description</th>
+                            <th class="p-3 text-left">Status</th>
+                            <th class="p-3 text-left">Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                            if(isset($_GET['page'])){
-                                    $page = mysqli_real_escape_string($con, $_GET['page']);
-                                    $currPage = 0;
-                                    $currPage = $currPage + $page;
-                                    $offset = $currPage * 20;
-                                    $query = "SELECT * FROM notification ORDER BY created_at DESC LIMIT 20 OFFSET $offset";
-                            }else{
-                                    $query = "SELECT * FROM notification ORDER BY created_at DESC LIMIT 20";
-                            }
-                            $run_query = mysqli_query($con, $query);
-                            $num_rows = mysqli_num_rows($run_query);
+                        if(isset($_GET['page'])){
+                            $page = mysqli_real_escape_string($con, $_GET['page']);
+                            $currPage = (int)$page;
+                            $offset = $currPage * 20;
+                        } else {
+                            $currPage = 0;
+                            $offset = 0;
+                        }
 
-                            if($num_rows>0){
-                                while($row = mysqli_fetch_array($run_query)){
-                                    $trTime = $row['created_at'];
-                                    $trTime = date("m/d/Y", strtotime($trTime));
+                        $query = "SELECT * FROM notification ORDER BY created_at DESC LIMIT 20 OFFSET $offset";
+                        $run_query = mysqli_query($con, $query);
+                        $num_rows = mysqli_num_rows($run_query);
 
+                        if($num_rows > 0){
+                            while($row = mysqli_fetch_array($run_query)){
+                                $trTime = date("m/d/Y", strtotime($row['created_at']));
                         ?>
-                        <tr class="border-b border-slate-400 hover:bg-slate-100">
-                            <td class="p-1 text-sm"><?= $row['title']?></td>
-                            <td class="p-1"><?= $row['description']?></td>
-                            <td class="p-1 text-xs"><span class="p-1 <?= $row['status'] == 'READ' ? 'bg-green-100' : 'bg-yellow-100'?>"><?= $row['status']?></span></td>
-                            <td class="p-1 text-left"><?= $trTime;?> </td>
-                        </tr> 
-                        <?php
-                                }
-                            }else{
-                            ?>
-                            <tr class="text-center">
-                                <td colspan="9" class="p-1 font-medium">No notifications found!</td>
-                            </tr>
-                        <?php } ?> 
-                        
+                        <tr class="border-b hover:bg-gray-50 transition">
+                            <td class="p-3"><?= $row['title']?></td>
+                            <td class="p-3"><?= $row['description']?></td>
+                            <td class="p-3">
+                                <span class="px-2 py-1 text-xs rounded-md font-medium 
+                                    <?= $row['status'] == 'READ' 
+                                        ? 'bg-green-100 text-green-700' 
+                                        : 'bg-yellow-100 text-yellow-700' ?>">
+                                    <?= $row['status']?>
+                                </span>
+                            </td>
+                            <td class="p-3"><?= $trTime;?></td>
+                        </tr>
+                        <?php } } else { ?>
+                        <tr>
+                            <td colspan="4" class="p-4 text-center text-gray-500">
+                                No notifications found!
+                            </td>
+                        </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
-                <?php if($num_rows != 0){?>
-                <div class="w-full h-auto flex items-center justify-end py-4 px-2 gap-2">
-                    <a href="notifSettings.php?page=<?= isset($_GET['page']) ? $_GET['page'] - 1 : -1;?>" class="<?= $currPage == 0 ? 'hidden' : ''?>"><button class="bg-slate-200 p-1 rounded-sm hover:bg-slate-300 font-medium active:opacity-80">< Previous</button></a>
-                    <a href="notifSettings.php?page=<?= isset($_GET['page']) ? $_GET['page'] + 1 : 1;?>"><button class="bg-slate-200 p-1 rounded-sm hover:bg-slate-300 font-medium active:opacity-80">Next ></button></a>
-                </div>
-                <?php }?>
             </div>
-            
+
+            <!-- Pagination -->
+            <?php if($num_rows != 0){ ?>
+            <div class="flex justify-end gap-2 p-4">
+                <a href="notifSettings.php?page=<?= $currPage - 1 ?>" class="<?= $currPage == 0 ? 'hidden' : '' ?>">
+                    <button class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 text-sm">
+                        ← Previous
+                    </button>
+                </a>
+
+                <a href="notifSettings.php?page=<?= $currPage + 1 ?>">
+                    <button class="px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300 text-sm">
+                        Next →
+                    </button>
+                </a>
+            </div>
+            <?php } ?>
+
         </div>
 
-
+        
     </div>
 </div>
 

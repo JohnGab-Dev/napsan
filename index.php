@@ -214,7 +214,6 @@ about -->
             <ul class="space-y-2 text-sm">
                 <li><a href="#" class="hover:text-blue-600">Home</a></li>
                 <li><a href="#products" class="hover:text-blue-600">Products</a></li>
-                <li><a href="#services" class="hover:text-blue-600">Services</a></li>
                 <li><a href="#contact" class="hover:text-blue-600">Contact</a></li>
             </ul>
         </div>
@@ -239,7 +238,7 @@ about -->
 
             <div class="mt-4 text-sm text-gray-600">
                 <p><span class="font-semibold">Business Hours:</span></p>
-                <p>Mon - Sun: 6:30:00 AM - 6:30 PM</p>
+                <p>Mon - Sun: 6:30 AM - 6:30 PM</p>
                 <!-- <p>Sunday: Closed</p> -->
             </div>
         </div>

@@ -73,23 +73,25 @@
 
 </nav>
 <script>
-    const sidenav = document.querySelector(".sidenav");
-    const btn_nav = document.querySelector(".btn-nav");
-    const close = document.querySelector(".close");
-      
-    btn_nav.addEventListener("click", ()=> {
-        sidenav.classList.add("active");
-    })
+    document.addEventListener("DOMContentLoaded", () => {
+        const sidenav = document.querySelector(".sidenav");
+        const btn_nav = document.querySelector(".btn-nav");
+        const close = document.querySelector(".close");
+        
+        btn_nav.addEventListener("click", ()=> {
+            sidenav.classList.add("active");
+        })
 
-    close.addEventListener("click", ()=> {
-        sidenav.classList.remove("active");
-    })
+        close.addEventListener("click", ()=> {
+            sidenav.classList.remove("active");
+        })
 
-    window.addEventListener("click", (event)=> {
-    if (event.target !== sidenav && event.target !== btn_nav) {
-        sidenav.classList.remove("active");
-        event.stopPropagation;
-    }
-    })
+        window.addEventListener("click", (event)=> {
+        if (event.target !== sidenav && event.target !== btn_nav) {
+            sidenav.classList.remove("active");
+            event.stopPropagation;
+        }
+        })
+     });
 
 </script>

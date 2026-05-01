@@ -14,93 +14,141 @@ require 'popups/alerts.php';
 require 'popups/delStocks.php';
 
 ?>
-    <div class="w-full h-screen pt-10 p-2">
-        <div class="w-full h-full bg-white shadow-md rounded-sm p-4 flex flex-col gap-4">
-            <div class="w-full h-10rem flex justify-between">
-                <div class="w-auto h-auto flex items-center font-medium">
-                    <a href="inventory.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 ">Products Inventory</a>
-                    <a href="stocks.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 border-green-600 bg-slate-100">Stocks Deliveries</a>
-                    <a href="low_stock.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 ">Low Stocks</a>
-                    <a href="expiring.php" class="px-2 hover:bg-slate-100 py-1 border-b-2 ">Expiring Products</a>
-                    <?php if($_SESSION['user']['role'] == 'admin'){?>
-                        <button class="delAll ml-2 px-2 py-1 rounded-sm bg-red-600 font-medium text-white hover:bg-red-700 active:opacity-80">Delete All</button>
-                    <?php }?>
+    <div class="w-full h-screen pt-20 px-4 pb-4">
+        <div class="w-full h-full bg-white shadow-lg rounded-lg p-6 flex flex-col gap-4">
+
+            <!-- HEADER -->
+            <div class="w-full flex justify-between flex-wrap gap-3">
+
+                <!-- Tabs -->
+                <div class="flex flex-wrap items-center gap-2 font-medium">
+                    <a href="inventory.php" class="px-4 py-2 rounded-t-md border-b-2 border-transparent hover:border-green-600 hover:bg-green-50 transition">
+                        Products Inventory
+                    </a>
+                    <a href="stocks.php" class="px-4 py-2 rounded-t-md border-b-2 border-green-600 bg-green-50 text-green-800">
+                        Stocks Deliveries
+                    </a>
+                    <a href="low_stock.php" class="px-4 py-2 rounded-t-md border-b-2 border-transparent hover:border-green-600 hover:bg-green-50 transition">
+                        Low Stocks
+                    </a>
+                    <a href="expiring.php" class="px-4 py-2 rounded-t-md border-b-2 border-transparent hover:border-green-600 hover:bg-green-50 transition">
+                        Expiring Products
+                    </a>
+
+                    <?php if($_SESSION['user']['role'] == 'superadmin'){ ?>
+                        <button class="delAll ml-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+                            Delete All
+                        </button>
+                    <?php } ?>
                 </div>
 
-                <div class="w-2/5 h-10 bg-slate-100 flex items-center gap-2 px-2 rounded-sm hover:bg-slate-200">
-                    <input type="text" class="w-11/12 outline-none py-1 bg-slate-100 focus:border-b-2 focus:border-green-600 px-2" placeholder="search here..." autofocus id="myInput" onkeyup="myFunction()">
-                    <img src="imgs/search.png" alt="" class="w-7">
-                </div>
-            </div>  
+                <!-- Search -->
+                <div class="w-full md:w-2/5">
+                    <div class="relative w-full">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+                            </svg>
+                        </div>
 
+                        <input 
+                            type="text" 
+                            id="myInput"
+                            onkeyup="myFunction()"
+                            placeholder="Search stock deliveries..."
+                            class="w-full rounded-xl bg-gray-100 pl-10 pr-4 py-3 text-gray-700 shadow-sm focus:bg-white focus:ring-2 focus:ring-green-500 focus:outline-none transition"
+                        >
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
             <div class="w-full h-[90%] overflow-y-auto">
-                <table class="w-full font-medium" id="myTable">
-                    <thead>
-                        <tr class="border-y bg-green-600 text-white">
-                            <th class="p-1 text-left">Date Inputted</th>
-                            <th class="p-1 text-left">Product Name</th>
-                            <th class="p-1 text-left">Stocks In</th>   
-                            <th class="p-1 text-left">Expiry</th>
-                            <th class="p-1 text-left">Distributor</th>
-                            <th class="p-1 text-left">Action</th>
+                <table id="myTable" class="w-full text-left border-collapse">
+                    
+                    <thead class="bg-green-600 text-white">
+                        <tr>
+                            <th class="p-3 rounded-tl-lg">Date Inputted</th>
+                            <th class="p-3">Product Name</th>
+                            <th class="p-3">Stocks In</th>
+                            <th class="p-3">Expiry</th>
+                            <th class="p-3">Distributor</th>
+                            <th class="p-3 rounded-tr-lg">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody class="divide-y divide-gray-200">
                         <?php 
                             if(isset($_GET['page'])){
-                                    $page = mysqli_real_escape_string($con, $_GET['page']);
-                                    $currPage = 0;
-                                    $currPage = $currPage + $page;
-                                    $offset = $currPage * 20;
-                                    $query = "SELECT stock_expiry.*, products.*, stock_expiry.created_at as del_date FROM stock_expiry JOIN products ON stock_expiry.productId = products.productId ORDER BY stock_expiry.created_at DESC LIMIT 20 OFFSET $offset";
+                                $page = mysqli_real_escape_string($con, $_GET['page']);
+                                $currPage = $page;
+                                $offset = $currPage * 20;
+                                $query = "SELECT stock_expiry.*, products.*, stock_expiry.created_at as del_date 
+                                        FROM stock_expiry 
+                                        JOIN products ON stock_expiry.productId = products.productId 
+                                        ORDER BY stock_expiry.created_at DESC 
+                                        LIMIT 20 OFFSET $offset";
                             }else{
-                                    $query = "SELECT stock_expiry.*, products.*, stock_expiry.created_at as del_date FROM stock_expiry JOIN products ON stock_expiry.productId = products.productId ORDER BY stock_expiry.created_at DESC LIMIT 20";
+                                $currPage = 0;
+                                $query = "SELECT stock_expiry.*, products.*, stock_expiry.created_at as del_date 
+                                        FROM stock_expiry 
+                                        JOIN products ON stock_expiry.productId = products.productId 
+                                        ORDER BY stock_expiry.created_at DESC 
+                                        LIMIT 20";
                             }
-                        
+
                             $run_query = mysqli_query($con, $query);
-                            $num_rows = mysqli_num_rows($run_query);
-                            if($num_rows > 0){
+
+                            if(mysqli_num_rows($run_query) > 0){
                                 while($row = mysqli_fetch_array($run_query)){
+
+                                    $date1 = date("F j, Y", strtotime($row['del_date']));
+                                    $expiry = date("F j, Y", strtotime($row['expiry']));
                         ?>
-                        <tr class="border-b border-slate-400 hover:bg-slate-100">
-                            <?php 
-                                $date1 = $row['del_date'];
-                                $date1 = date("F j, Y", strtotime($date1));
-
-                                $expiry = $row['expiry'];
-                                $expiry = date("F j, Y", strtotime($expiry));
-
-                            ?>
-                            <td class="p-1"><?= $date1?></td>
-                            <td class="p-1 text-sm"><?= $row['name']?></td>
-                            <td class="p-1"><?= $row['stocks_in']?></td>        
-                            <td class="p-1"><?= $expiry?></td>
-                            <td class="p-1"><?= $row['distributor']?></td>
-                            <td class="p-1">
-                                <button type="button" onclick="openEdit(<?= $row['stId']?>)" class="text-xs p-1 rounded-sm bg-blue-600 hover:bg-blue-700  text-white active:opacity-80">Edit</button>
-                                <?php require 'popups/editStock.php';?>
-                            </td>
-                        </tr> 
                         
-                        <?php 
-                                }}else{
-                        ?>
-                            <tr class="text-center">
-                                <td colspan="7" class="p-1 font-medium">No Stock Deliveries Conducted!</td>
+                        <tr class="hover:bg-gray-50 transition">
+                            <td class="p-2"><?= $date1 ?></td>
+                            <td class="p-2 font-medium"><?= $row['name'] ?></td>
+                            <td class="p-2"><?= $row['stocks_in'] ?></td>
+                            <td class="p-2"><?= $expiry ?></td>
+                            <td class="p-2"><?= $row['distributor'] ?></td>
+                            <td class="p-2">
+                                <button onclick="openEdit(<?= $row['stId']?>)" 
+                                    class="text-xs px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">
+                                    Edit
+                                </button>
+                                <?php require 'popups/editStock.php'; ?>
+                            </td>
+                        </tr>
+
+                        <?php }} else { ?>
+                            <tr>
+                                <td colspan="6" class="p-4 text-center text-gray-500 font-medium">
+                                    No Stock Deliveries Conducted!
+                                </td>
                             </tr>
-                        <?php
-                                }
-                        ?>
+                        <?php } ?>
                     </tbody>
                 </table>
-                
-                <div class="w-full h-auto flex items-center justify-end py-4 px-2 gap-2">
-                    <a href="stocks.php?page=<?= isset($_GET['page']) ? $_GET['page'] - 1 : -1;?>" class="<?= $currPage == 0 ? 'hidden' : ''?>"><button class="bg-slate-200 p-1 rounded-sm hover:bg-slate-300 font-medium active:opacity-80">< Previous</button></a>
-                    <a href="stocks.php?page=<?= isset($_GET['page']) ? $_GET['page'] + 1 : 1;?>"><button class="bg-slate-200 p-1 rounded-sm hover:bg-slate-300 font-medium active:opacity-80">Next ></button></a>
+
+                <!-- PAGINATION -->
+                <div class="w-full flex justify-end py-4 gap-2">
+                    <a href="stocks.php?page=<?= $currPage - 1 ?>" class="<?= $currPage == 0 ? 'hidden' : '' ?>">
+                        <button class="px-3 py-1 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
+                            &lt; Previous
+                        </button>
+                    </a>
+
+                    <a href="stocks.php?page=<?= $currPage + 1 ?>">
+                        <button class="px-3 py-1 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition">
+                            Next &gt;
+                        </button>
+                    </a>
                 </div>
-             
+
             </div>
-            
         </div>
     </div>
 <script>

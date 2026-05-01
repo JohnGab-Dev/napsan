@@ -23,17 +23,18 @@
 </div>
 
 <script>
-    const notif = document.querySelector(".notif");
-    const notif_toggle = document.querySelector(".notiftoggle");
+    document.addEventListener("DOMContentLoaded", () => {
+        const notif = document.querySelector(".notif");
+        const notif_toggle = document.querySelector(".notiftoggle");
 
-    notif_toggle.addEventListener("click", () => {
-        notif.classList.toggle("active");
+        notif_toggle.addEventListener("click", () => {
+            notif.classList.toggle("active");
+        });
+
+        window.addEventListener("click", (event) => {
+            if (!notif.contains(event.target) && !notif_toggle.contains(event.target)) {
+                notif.classList.remove("active");
+            }
+        }); 
     });
-
-    window.addEventListener("click", (event) => {
-        if (!notif.contains(event.target) && !notif_toggle.contains(event.target)) {
-            notif.classList.remove("active");
-        }
-    }); 
-
 </script>

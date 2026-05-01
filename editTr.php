@@ -22,105 +22,160 @@ $datetime = new DateTime($created_date);
 $created_date = $datetime->format('F d, Y h:i A');
 ?>
 
-<div class="w-full h-screen pt-10 p-2 flex gap-2 justify-center">
-    <div class="w-1/2 h-full bg-white flex flex-col gap-4 flex-shrink-0">
-            <div class="w-full h-1/2 border-b p-4">
-                <div class="w-full h-auto py-1 bg-white flex justify-between items-center">
-                    <h1 class="font-semibold">Transaction # <?= $trId?></h1>
-                    <h1 class="font-semibold"><?= $created_date?></h1>
-                </div>
-                <div class="w-full h-[90%] overflow-y-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-white bg-green-600">
-                                <th class="p-1 text-left">Product Name </th>
-                                <th class="p-1 text-left">QTY </th>
-                                <th class="p-1 text-left">SRP </th>
-                                <th class="p-1 text-left">Total </th>
-                                <th class="p-1 text-left">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm font-medium">
+    <div class="w-full min-h-screen pt-20 px-4 pb-4 flex justify-center">
+        <div class="w-full max-w-6xl bg-white shadow-lg rounded-lg p-6 flex flex-col gap-6">
 
-                        <?php
-                            $query1 = "SELECT productsold.soldId, productsold.productId, productsold.qty as Cqty, productsold.srp, productsold.capital, productsold.total, products.name FROM productsold JOIN products ON productsold.productId = products.productId WHERE transId = '$trId' ORDER BY productsold.created_at DESC";
-                            $run_query1 = mysqli_query($con, $query1);
-                            $sub_total = 0;
-
-                            if(mysqli_num_rows($run_query1)>0){
-                                while($row1 = mysqli_fetch_array($run_query1)){
-                                    $sub_total = $sub_total + $row1['total'];
-                        ?>
-                            
-                            <tr class="border-b border-slate-400 hover:bg-slate-100">
-                                <td class="p-1"><?= $row1['name']?></td>
-                                <td class="p-1"><?= $row1['Cqty']?></td>
-                                <td class="p-1">P<?= $row1['srp']?></td>
-                                <td class="p-1">
-                                    P<?= $row1['total']?>
-                                </td>
-                                <td class="p-1 flex items-center gap-1"> 
-                                    <form action="api/TransactionController.php?id=<?= $row1['soldId']?>" method="post">
-                                        <button type="submit" name="delSold" class="text-xs p-1 rounded-sm bg-red-600 hover:bg-red-700 text-white active:opacity-80">Return</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <?php
-                                }
-                            }else{
-                        ?>
-                        <tr class="text-center">
-                            <td colspan="5" class="p-1 font-medium py-1">No Products added</td>
-                        </tr>
-                    <?php }?> 
-                            
-                        </tbody>
-                    </table>
-
-                </div>
-                
-                
+            <!-- HEADER -->
+            <div class="flex justify-between items-center border-b pb-3">
+                <h1 class="text-lg font-semibold">
+                    Transaction #<?= $trId ?>
+                </h1>
+                <p class="text-sm text-gray-500"><?= $created_date ?></p>
             </div>
-            <form action="api/TransactionController.php?id=<?= $trId;?>" method="post" class="w-full h-1/2 flex flex-col px-4 gap-2">
-                <div class="w-full h-auto flex justify-between items-center">
-                    <label for="" class="font-semibold">SUB-TOTAL(PHP):</label>
-                    <input type="text" step="any" name="subtotal" class="sub text-right py-1 outline-none w-4/6 border font-medium mr-12 bg-slate-100 px-2" readonly value="<?= number_format($sub_total, 2);?>" required>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- LEFT: PRODUCTS -->
+                <div class="flex flex-col">
+
+                    <h2 class="text-md font-semibold mb-2">Purchased Items</h2>
+
+                    <div class="border rounded-lg overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+
+                            <thead class="bg-green-600 text-white">
+                                <tr>
+                                    <th class="p-3">Product</th>
+                                    <th class="p-3">Qty</th>
+                                    <th class="p-3">SRP</th>
+                                    <th class="p-3">Total</th>
+                                    <th class="p-3">Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-200 text-sm">
+                                <?php
+                                $query1 = "SELECT productsold.soldId, productsold.productId, productsold.qty as Cqty, productsold.srp, productsold.capital, productsold.total, products.name 
+                                        FROM productsold 
+                                        JOIN products ON productsold.productId = products.productId 
+                                        WHERE transId = '$trId' 
+                                        ORDER BY productsold.created_at DESC";
+
+                                $run_query1 = mysqli_query($con, $query1);
+                                $sub_total = 0;
+
+                                if(mysqli_num_rows($run_query1)>0){
+                                    while($row1 = mysqli_fetch_array($run_query1)){
+                                        $sub_total += $row1['total'];
+                                ?>
+
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="p-2 font-medium"><?= $row1['name'] ?></td>
+                                    <td class="p-2"><?= $row1['Cqty'] ?></td>
+                                    <td class="p-2">₱<?= number_format($row1['srp'],2) ?></td>
+                                    <td class="p-2">₱<?= number_format($row1['total'],2) ?></td>
+                                    <td class="p-2">
+                                        <form action="api/TransactionController.php?id=<?= $row1['soldId']?>" method="post">
+                                            <button type="submit" name="delSold"
+                                                class="text-xs px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-md transition">
+                                                Return
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+
+                                <?php }} else { ?>
+                                    <tr>
+                                        <td colspan="5" class="p-4 text-center text-gray-500">
+                                            No products added
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="w-full h-auto flex justify-between items-center gap-2">
-                    <label for="" class="font-semibold">DISCOUNT(PHP):</label>
-                    <input type="number" step="any" name="discount" class="dis border border-black rounded-sm px-2 py-1 outline-none w-4/5 h-8 font-medium mr-12 focus:border-2 focus:border-green-600" value="<?= $row['discount']?>">
-                </div>
+                <!-- RIGHT: SUMMARY -->
+                <form action="api/TransactionController.php?id=<?= $trId;?>" method="post" 
+                    class="flex flex-col gap-4">
 
-                <div class="w-full h-auto flex justify-between items-center">
-                    <label for="" class="font-semibold">TOTAL(PHP):</label>
-                    <input type="text" step="any" name="total" class="total text-right py-1 outline-none w-4/6 border font-medium mr-12 bg-slate-100 px-2" readonly value="<?= number_format($sub_total - $row['discount'], 2) ;?>" required>
-                </div>
+                    <h2 class="text-md font-semibold">Payment Summary</h2>
 
-                <div class="w-full h-auto flex items-center gap-2">
-                    <h1 class="font-medium">Payment Methods:</h1>
-                    <input type="radio" name="methods" class="hidden" id="method1" required value="Cash" <?= $row['mode_of_payment'] == 'Cash' ? 'checked' : ''?> disabled>
-                    <label for="method1" class="method px-2 py-1 border rounded-sm hover:bg-green-100 cursor-pointer font-medium" id="method1"  >CASH</label>
+                    <!-- SUBTOTAL -->
+                    <div class="flex justify-between items-center">
+                        <label class="font-medium">Subtotal</label>
+                        <input type="text" name="subtotal"
+                            class="sub text-right w-1/2 bg-gray-100 px-3 py-2 rounded-md border"
+                            readonly
+                            value="<?= number_format($sub_total, 2); ?>">
+                    </div>
 
-                    <input type="radio" name="methods" class="hidden" id="method2" required value="Gcash" <?= $row['mode_of_payment'] == 'Gcash' ? 'checked' : ''?> disabled>
-                    <label for="method2" class="method px-2 py-1 border rounded-sm hover:bg-green-100 cursor-pointer font-medium" id="method2">G-CASH</label>
+                    <!-- DISCOUNT -->
+                    <div class="flex justify-between items-center">
+                        <label class="font-medium">Discount</label>
+                        <input type="number" step="any" name="discount"
+                            class="dis w-1/2 px-3 py-2 rounded-md border focus:ring-2 focus:ring-green-500 outline-none"
+                            value="<?= $row['discount'] ?>">
+                    </div>
 
-                    <input type="number" name="refnum" class=" bg-slate-100 rounded-sm px-2 py-1 outline-none w-[14rem] h-8 font-medium mr-12" placeholder="Ref. num(if gcash)" value="<?= $row['ref_num'] == 'N/A' ? '' : $row['ref_num']?>" readonly>
-                </div>
+                    <!-- TOTAL -->
+                    <div class="flex justify-between items-center">
+                        <label class="font-semibold">Total</label>
+                        <input type="text" name="total"
+                            class="total text-right w-1/2 bg-gray-100 px-3 py-2 rounded-md border font-semibold"
+                            readonly
+                            value="<?= number_format($sub_total - $row['discount'], 2); ?>">
+                    </div>
 
-                <div class="w-full h-auto flex justify-between items-center gap-2">
-                    <label for=""  class="font-semibold">AMOUNT TENDERED(PHP):</label>
-                    <input type="text" step="any" name="amount" class="sub text-right py-1 outline-none w-11/12 border font-medium mr-12 bg-slate-100 px-2" readonly value="<?= $row['tendered']?>" required>
-                </div>
-                
+                    <!-- PAYMENT METHOD -->
+                    <div class="flex flex-col gap-2">
+                        <label class="font-medium">Payment Method</label>
 
-                <div class="w-full h-auto flex justify-end items-center gap-4">
-                    <a href="transactions.php"><button type="button" class="px-3 py-1 rounded-sm bg-neutral-600 hover:bg-neutral-700 text-white font-medium active:opacity-80">Exit</button></a>
-                    <button type="submit" name="save" class="px-2 py-1 rounded-sm bg-green-600 hover:bg-green-700 text-white font-medium active:opacity-80">Save Changes</button>
-                </div>
-            </form>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 rounded-full text-xs 
+                                <?= $row['mode_of_payment'] == 'Cash' 
+                                    ? 'bg-yellow-200 text-yellow-800' 
+                                    : 'bg-blue-200 text-blue-800' ?>">
+                                <?= $row['mode_of_payment'] ?>
+                            </span>
+                        </div>
+
+                        <input type="text"
+                            class="bg-gray-100 px-3 py-2 rounded-md border"
+                            value="<?= $row['ref_num'] == 'N/A' ? 'No reference' : $row['ref_num'] ?>"
+                            readonly>
+                    </div>
+
+                    <!-- TENDERED -->
+                    <div class="flex justify-between items-center">
+                        <label class="font-medium">Amount Tendered</label>
+                        <input type="text"
+                            class="text-right w-1/2 bg-gray-100 px-3 py-2 rounded-md border"
+                            value="<?= number_format($row['tendered'],2) ?>"
+                            readonly>
+                    </div>
+
+                    <!-- ACTION BUTTONS -->
+                    <div class="flex justify-end gap-3 pt-4">
+                        <a href="transactions.php">
+                            <button type="button"
+                                class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition">
+                                Exit
+                            </button>
+                        </a>
+
+                        <button type="submit" name="save"
+                            class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition">
+                            Save Changes
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
-</div>
+    </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {

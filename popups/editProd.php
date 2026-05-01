@@ -1,87 +1,98 @@
-<div class="bg1 editProd<?= $row['productId']?> hidden w-full h-screen z-50 items-center justify-center absolute top-0 left-0 right-0">
-    <form action="api/ProductController.php?id=<?= $row['productId']?>" method="POST" class="w-3/5 h-5/5 bg-white rounded-sm p-5 flex flex-col gap-4">
-        <div class="w-full h-auto flex justify-between">
+<div class="bg1 editProd<?= $row['productId']?> hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+
+    <form action="api/ProductController.php?id=<?= $row['productId']?>" method="POST"
+        class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-8 flex flex-col gap-6 animate-fadeIn">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b pb-3">
             <div>
-                <h1 class="font-medium">Edit a Product</h1>
-                <p class="text-xs">Please fill all fields</p>
+                <h1 class="text-lg font-semibold">Edit Product</h1>
+                <p class="text-sm text-gray-500">Update product details</p>
             </div>
-            <img src="imgs/close-n.png" onclick="closeEdit(<?= $row['productId']?>)" alt="" class="cl-add w-7 h-7 p-2 cursor-pointer rounded-sm hover:bg-slate-100 active:opacity-80">
+
+            <button type="button" onclick="closeEdit(<?= $row['productId']?>)"
+                class="text-xl font-bold hover:text-red-500 transition">
+                &times;
+            </button>
         </div>
+
+        <!-- Alert -->
         <?php if(isset($_SESSION['error'])){ ?>
-                <div class="alert flex w-full h-5/5 bg-red-200 border-l-4 border-red-600 items-center justify-between px-2 text-sm p-1 rounded-sm">
-                    <h1><?= $_SESSION['error'];?></h1>
-                    <button type="button" class="close p-1 hover:bg-slate-100 active:opacity-80"><img src="imgs/close-n.png" class="w-3 h-3" alt=""></button>
-                </div>
-                <script>
-                    const alert = document.querySelector(".alert");
-                    const close = document.querySelector(".close");
-
-                    close.addEventListener("click", ()=> {
-                        alert.classList.replace('flex','hidden');
-                    })
-                </script>
-        <?php unset($_SESSION['error']); }?>
-        <div class="w-full h-full flex gap-4">
-            <div class="w-1/2 h-full flex flex-col gap-4">
-                <div class="">
-                    <label for="name">Product Name</label>
-                    <input type="text" name="name" id="name" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" autofocus required value="<?= $row['name']?>">
-                </div>
-
-                <div class="">
-                    <label for="qty">QTY</label>
-                    <input type="number" name="qty" id="qty" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required value="<?= $row['qty']?>">
-                </div>
-
-
-                <div class="">
-                    <label for="distrib">Distributor</label>
-                    <input type="text" name="distrib" id="distrib" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required value="<?= $row['distributor']?>">
-                </div>
+            <div class="flex items-center justify-between bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-2 rounded-md text-sm shadow-sm">
+                <span><?= $_SESSION['error'];?></span>
+                <button type="button" class="text-lg closeAlert">&times;</button>
             </div>
-            <div class="w-1/2 h-full flex flex-col gap-4">
-                <div class="">
-                    <label for="srp">SRP(PHP)</label>
-                    <input type="number" step="any" min="0" name="srp" id="srp" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required value="<?= $row['srp']?>">
+        <?php unset($_SESSION['error']); } ?>
+
+        <!-- Form Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- LEFT -->
+            <div class="flex flex-col gap-4">
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Product Name</label>
+                    <input type="text" name="name" required autofocus
+                        value="<?= $row['name']?>"
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100 focus:ring-2 focus:ring-green-500 outline-none">
                 </div>
 
-                <div class="">
-                    <label for="capital">Capital(PHP)</label>
-                    <input type="number" step="any" min="0" name="capital" id="capital" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required value="<?= $row['capital']?>">
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Quantity</label>
+                    <input type="number" name="qty" min="0" required
+                        value="<?= $row['qty']?>"
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100 focus:ring-2 focus:ring-green-500 outline-none">
                 </div>
 
-                <div class="">
-                    <label for="level">Level of Stocks before Notify</label>
-                    <input type="number" min="0" name="level" id="level" class="w-full border h-10 text-lg outline-none px-1 border-black rounded-sm focus:border-2 focus:border-green-600" required value="<?= $row['level_notif']?>">
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Distributor</label>
+                    <input type="text" name="distrib" required
+                        value="<?= $row['distributor']?>"
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100 focus:ring-2 focus:ring-green-500 outline-none">
                 </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="flex flex-col gap-4">
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">SRP (PHP)</label>
+                    <input type="number" name="srp" step="any" min="0" required
+                        value="<?= $row['srp']?>"
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100 focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Capital (PHP)</label>
+                    <input type="number" name="capital" step="any" min="0" required
+                        value="<?= $row['capital']?>"
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100 focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Stock Alert Level</label>
+                    <input type="number" name="level" min="0" required
+                        value="<?= $row['level_notif']?>"
+                        class="w-full border rounded-md px-3 py-2 bg-gray-100 focus:ring-2 focus:ring-green-500 outline-none">
+                </div>
+
             </div>
 
         </div>
-                    
 
-        <div class="w-full flex justify-end">
-            <button type="submit" name="editProd" class=" px-4 h-8 bg-green-600 text-white font-semibold hover:bg-green-700 active:opacity-80">Save Changes</button>
+        <!-- Footer -->
+        <div class="flex justify-end gap-2 pt-4 border-t">
+            <button type="button" onclick="closeEdit(<?= $row['productId']?>)"
+                class="px-4 py-2 rounded-md border hover:bg-gray-100">
+                Cancel
+            </button>
+
+            <button type="submit" name="editProd"
+                class="px-5 py-2 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 transition">
+                Save Changes
+            </button>
         </div>
-        
+
     </form>
 </div>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const addProd = document.querySelector(".addProd");
-        const add = document.querySelector(".add");
-        const cl_add = document.querySelector(".cl-add");
-
-        add.addEventListener("click", () => {
-            addProd.classList.add("active");
-        });
-
-        cl_add.addEventListener("click", () => {
-            addProd.classList.remove("active");
-        });
-    });
-
-    
-
-</script>

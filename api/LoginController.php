@@ -11,7 +11,7 @@
             $_SESSION['error'] = 'All fields are required!';
             header("Location: ../login.php");
         }else{
-            $query = "SELECT * FROM users WHERE username = '$username'";
+            $query = "SELECT * FROM users WHERE BINARY username = '$username'";
             $run_query = mysqli_query($con, $query);
             if($run_query){
                 if(mysqli_num_rows($run_query) > 0){
