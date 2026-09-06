@@ -261,8 +261,12 @@ require 'methods/checkInvent.php';
 
                                             if(($date_ymd > date('Y-m-d', strtotime('2026-03-30'))) && ($date_ymd < date('Y-m-d', strtotime('2026-04-17')))){
                                                 $overhead_Sales_Monthly = 3000;
-                                            }else{
+                                            }else if(($date_ymd > date('Y-m-d', strtotime('2026-04-17'))) && ($date_ymd < date('Y-m-d', strtotime('2026-08-30')))){
                                                 $overhead_Sales_Monthly = 3300;
+                                            }else if(($date_ymd > date('Y-m-d', strtotime('2026-08-30')))){
+                                                $overhead_Sales_Monthly = 3000;
+                                            }else{
+                                                $overhead_Sales_Monthly = 3000; 
                                             }
                                         ?>
                                         <td class="px-4 py-3 font-medium">₱<?= number_format($row3['Subprofit'] - ($num_days * $overhead_Sales_Monthly), 2, ".", ",")?></td>
@@ -337,7 +341,7 @@ require 'methods/checkInvent.php';
 
         <!-- Sales Last 50 Day -->
             <div class="w-full h-[30rem] rounded-xl bg-white shadow-lg p-6 flex flex-col gap-4 overflow-y-auto">
-                <h1 class="text-xl font-semibold text-gray-700">Sales Last 50 Days</h1>
+                <h1 class="text-xl font-semibold text-gray-700">Sales Last 100 Days</h1>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-green-600 sticky top-0">
@@ -351,7 +355,7 @@ require 'methods/checkInvent.php';
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <?php 
-                               $query5 = "SELECT SUM(total) as Total, SUM(profit) as Subprofit, date_created FROM transactions GROUP BY date_created ORDER BY date_created DESC LIMIT 50 ";
+                               $query5 = "SELECT SUM(total) as Total, SUM(profit) as Subprofit, date_created FROM transactions GROUP BY date_created ORDER BY date_created DESC LIMIT 100 ";
                                 $run_query5 = mysqli_query($con, $query5);
 
                                 if(mysqli_num_rows($run_query5) > 0){
@@ -361,6 +365,10 @@ require 'methods/checkInvent.php';
                                         $overhead_Sales = 0;
 
                                         if((date('Y-m-d', strtotime($row2['date_created'])) > date('Y-m-d', strtotime('2026-03-30'))) && (date('Y-m-d', strtotime($row2['date_created'])) < date('Y-m-d', strtotime('2026-04-17')))){
+                                            $overhead_Sales = 3000;
+                                        }else if((date('Y-m-d', strtotime($row2['date_created'])) > date('Y-m-d', strtotime('2026-04-17'))) && (date('Y-m-d', strtotime($row2['date_created'])) < date('Y-m-d', strtotime('2026-08-30')))){
+                                                $overhead_Sales = 3300;
+                                        }else if((date('Y-m-d', strtotime($row2['date_created'])) > date('Y-m-d', strtotime('2026-08-30')))){
                                             $overhead_Sales = 3000;
                                         }else{
                                             $overhead_Sales = 3300;

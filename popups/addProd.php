@@ -98,7 +98,6 @@
     }
 
     function cancelCoseModal(){
-
         const addProd = document.querySelector(".addProd");
         addProd.classList.remove("flex");
         addProd.classList.add("hidden");
